@@ -2,27 +2,29 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/local_btn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <include
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/create_task_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
         android:clickable="true"
+        app:backgroundTint="@color/cardview_dark_background"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
@@ -42,24 +44,29 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/tasks_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Tarefas"
+                app:backgroundTint="?android:attr/textColorSecondary" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/people_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Pessoas"
+                app:backgroundTint="?android:attr/textColorSecondary" />
 
             <Button
-                android:id="@+id/button5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Locais"
+                app:backgroundTint="?android:attr/textColorSecondary" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -68,11 +75,13 @@
         android:id="@+id/tasks_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:listitem="@layout/todo_list_item">
+        android:layout_marginTop="5dp"
+        tools:listitem="@layout/task_list">
 
     </androidx.recyclerview.widget.RecyclerView>
 

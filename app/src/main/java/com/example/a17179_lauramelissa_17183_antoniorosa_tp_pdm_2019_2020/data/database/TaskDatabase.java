@@ -3,6 +3,7 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.
 import android.content.Context;
 
 import androidx.room.Database;
+import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Task;
@@ -14,8 +15,15 @@ public abstract class TaskDatabase extends RoomDatabase {
 
     public static TaskDatabase getInstance(Context context) {
         if (instance == null) {
+            instance = Room
+                .databaseBuilder(context, TaskDatabase.class, "task_db")
+                .allowMainThreadQueries()
+                .build();
         }
 
        return instance;
     }
+
+    public abstract TaskDao taskDao();
 }
+
