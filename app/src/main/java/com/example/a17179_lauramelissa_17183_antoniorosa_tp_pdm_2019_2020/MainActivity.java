@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         this.adapter = new TaskAdapter();
         tasksList.setAdapter(adapter);
 
-        this.checkBox = findViewById(R.id.task_check_box);
+        this.checkBox = findViewById(R.id.task_item_check_box);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
         //utilizar o itemView para procurar os items
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            task_description = itemView.findViewById(R.id.task_description);
-            isDone = itemView.findViewById(R.id.task_check_box);
+            task_description = itemView.findViewById(R.id.task_item_description);
+            isDone = itemView.findViewById(R.id.task_item_check_box);
         }
 
         public void bind(Task task) {

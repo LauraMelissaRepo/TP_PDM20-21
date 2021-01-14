@@ -18,14 +18,14 @@
 
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/task_item_description"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="3"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/task_check_box"
+            app:layout_constraintEnd_toStartOf="@+id/task_item_check_box"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
@@ -34,7 +34,7 @@
 
 
         <CheckBox
-            android:id="@+id/task_check_box"
+            android:id="@+id/task_item_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/black"
