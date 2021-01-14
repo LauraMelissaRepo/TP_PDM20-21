@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_tasks"
+        android:icon="@drawable/ic_baseline_add_task_24"
+        android:title="Tarefas"
+        />
+
+    <item android:id="@+id/nav_people"
+        android:icon="@drawable/ic_baseline_people_alt_24"
+        android:title="Pessoas"
+        />
+
+    <item android:id="@+id/nav_map"
+        android:icon="@drawable/ic_baseline_location_on_24"
+        android:title="Locais"
+        />
+
+</menu>
