@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/nav_tasks"
         android:icon="@drawable/ic_baseline_add_task_24"
-        android:title="Tarefas"
+        android:title="@string/tarefas"
         />
 
     <item android:id="@+id/nav_people"
         android:icon="@drawable/ic_baseline_people_alt_24"
-        android:title="Pessoas"
+        android:title="@string/pessoas"
         />
 
     <item android:id="@+id/nav_map"
         android:icon="@drawable/ic_baseline_location_on_24"
-        android:title="Locais"
+        android:title="@string/locais"
         />
 </menu>

@@ -3,6 +3,7 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.
 import android.widget.CheckBox;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -18,8 +19,9 @@ public interface TaskDao {
     @Insert
     long insert(Task task);
 
-//    @Update()
-//    boolean update();
+    //Atualizar uma tarefa
+    @Update
+    void update(Task Task);
 
     //Query para ir buscar a lista de tarefa
     @Query("select * from task")
@@ -29,8 +31,8 @@ public interface TaskDao {
     @Query("select * from task where id = :id")
     Task get(long id);
 
-    //Query para eliminar uma tarefa
-    @Query("delete from task where id = :id")
-    void delete(long id);
+    //Eliminar uma tarefa
+    @Delete
+    void delete(Task Task);
 
 }

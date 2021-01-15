@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TaskAdapter adapter;
-    private CheckBox checkBox;
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         this.adapter = new TaskAdapter();
         tasksList.setAdapter(adapter);
 
-        this.checkBox = findViewById(R.id.task_item_check_box);
-
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,16 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-//        checkBox.setOnClickListener(v -> {
-//            if(checkBox.isChecked()) {
-//                TaskDatabase.getInstance(getApplicationContext())
-//                    .taskDao()
-//                    .update();
-//            }
-//        });
     }
-
+    /**
+     * Esta função vai buscar o item clicado na barra de navegação e
+     * consoante isso mostra a atividade correspondente
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -91,22 +87,30 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
     /**
-     * Buscar a lista das tarefas à base de dados cada vez que se inicia a aplicação
+     * Esta função vai buscar a lista das tarefas à base de dados cada vez que se inicia a aplicação.
+     * Atualiza os dados
      */
     @Override
     protected void onStart() {
         super.onStart();
+        refreshData();
+    }
+
+    private void refreshData() {
         List<Task> tasks = TaskDatabase.getInstance(getApplicationContext())
             .taskDao()
             .getAll();
         adapter.setData(tasks);
     }
 
+
     public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
         //definir a lista de tasks
         private List<Task> data = new ArrayList<>();
+
 
         public void setData(List<Task> data) {
             this.data = data;
@@ -132,22 +136,57 @@ public class MainActivity extends AppCompatActivity {
             return data.size();
         }
     }
-
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView task_description;
         private final CheckBox isDone;
+        private final TextView task_description;
+        private Task task;
+        private CardView cardView;
 
         //utilizar o itemView para procurar os items
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            task_description = itemView.findViewById(R.id.task_item_description);
-            isDone = itemView.findViewById(R.id.task_item_check_box);
+            this.task_description = itemView.findViewById(R.id.task_item_description);
+            this.isDone = itemView.findViewById(R.id.task_item_check_box);
+            this.cardView = itemView.findViewById(R.id.card_item_view);
+
+
+            builder = new AlertDialog.Builder(MainActivity.this);
+
+            this.isDone.setOnCheckedChangeListener((button, isChecked) -> {
+                this.task.setDone(isChecked);
+                TaskDatabase.getInstance(getApplicationContext()).taskDao().update(task);
+            });
+
+            this.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                   builder.setMessage("Prima sim para eliminá-la");
+                   builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           TaskDatabase.getInstance(getApplicationContext()).taskDao().delete(task);
+                           refreshData();
+                       }
+                   });
+                       builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               dialog.cancel();
+                           }
+                       });
+                       AlertDialog alert = builder.create();
+                       alert.setTitle("Deseja eliminar esta tarefa?");
+                       alert.show();
+                       return false;
+                }
+            });
         }
 
         public void bind(Task task) {
-            task_description.setText(task.getTask());
-            isDone.setChecked(task.isDone());
+            this.task = task;
+            this.task_description.setText(task.getTask());
+            this.isDone.setChecked(task.isDone());
         }
     }
 
