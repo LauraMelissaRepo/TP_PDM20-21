@@ -24,7 +24,7 @@ public class PeopleActivity extends AppCompatActivity {
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Pessoas");
+        getSupportActionBar().setTitle(R.string.people);
     }
 
 

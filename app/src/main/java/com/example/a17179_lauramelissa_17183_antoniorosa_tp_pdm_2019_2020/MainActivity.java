@@ -3,7 +3,6 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Tarefas");
+        getSupportActionBar().setTitle(R.string.tasks);
 
         RecyclerView tasksList = findViewById(R.id.tasks_list);
         FloatingActionButton createButton = findViewById(R.id.create_task_btn);
@@ -161,22 +160,22 @@ public class MainActivity extends AppCompatActivity {
             this.cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                   builder.setMessage("Prima sim para eliminá-la");
-                   builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                   builder.setMessage(R.string.taskDeleteMessage);
+                   builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialog, int which) {
                            TaskDatabase.getInstance(getApplicationContext()).taskDao().delete(task);
                            refreshData();
                        }
                    });
-                       builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                       builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
                                dialog.cancel();
                            }
                        });
                        AlertDialog alert = builder.create();
-                       alert.setTitle("Deseja eliminar esta tarefa?");
+                       alert.setTitle(getString(R.string.questionToDelete));
                        alert.show();
                        return false;
                 }

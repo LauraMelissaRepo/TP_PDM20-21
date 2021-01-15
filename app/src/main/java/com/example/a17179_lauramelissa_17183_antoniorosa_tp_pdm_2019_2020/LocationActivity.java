@@ -24,7 +24,7 @@ public class LocationActivity extends AppCompatActivity {
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Localizações");
+        getSupportActionBar().setTitle(R.string.locations);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
