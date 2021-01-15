@@ -3,9 +3,11 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Task;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,6 +71,25 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent resultIntent = null;
+
+                switch (item.getItemId()) {
+                    case R.id.nav_people:
+                        resultIntent = new Intent(MainActivity.this, PeopleActivity.class);
+                        break;
+                    case R.id.nav_map:
+                        resultIntent = new Intent(MainActivity.this, PeopleActivity.class);
+                        break;
+                }
+                startActivity(resultIntent);
+                return true;
+            }
+        };
 
     /**
      * Buscar a lista das tarefas à base de dados cada vez que se inicia a aplicação
