@@ -77,16 +77,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent resultIntent = null;
-
                 switch (item.getItemId()) {
                     case R.id.nav_people:
                         resultIntent = new Intent(MainActivity.this, PeopleActivity.class);
                         break;
                     case R.id.nav_map:
-                        resultIntent = new Intent(MainActivity.this, PeopleActivity.class);
+                        resultIntent = new Intent(MainActivity.this, LocationActivity.class);
                         break;
                 }
                 startActivity(resultIntent);
+                MainActivity.this.finish();
                 return true;
             }
         };

@@ -10,23 +10,22 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class PeopleActivity extends AppCompatActivity {
+public class LocationActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_people);
+        setContentView(R.layout.activity_location);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Pessoas");
+        getSupportActionBar().setTitle("Localizações");
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -35,14 +34,14 @@ public class PeopleActivity extends AppCompatActivity {
                 Intent resultIntent = null;
                 switch (item.getItemId()) {
                     case R.id.nav_tasks:
-                        resultIntent = new Intent(PeopleActivity.this, MainActivity.class);
+                        resultIntent = new Intent(LocationActivity.this, MainActivity.class);
                         break;
-                    case R.id.nav_map:
-                        resultIntent = new Intent(PeopleActivity.this, LocationActivity.class);
+                    case R.id.nav_people:
+                        resultIntent = new Intent(LocationActivity.this, PeopleActivity.class);
                         break;
                 }
                 startActivity(resultIntent);
-                PeopleActivity.this.finish();
+                LocationActivity.this.finish();
                 return true;
             }
         };
