@@ -22,7 +22,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
-        android:text="Adicionar"
+        android:text="Guardar"
         android:textColorHighlight="@android:color/darker_gray"
         android:textColorLink="@android:color/darker_gray"
         app:backgroundTint="?attr/colorButtonNormal"
@@ -54,8 +54,9 @@
             android:layout_height="match_parent">
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/new_description_task"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -67,15 +68,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/task_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Escreva aqui a sua tarefa"
-                    android:inputType="textMultiLine" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

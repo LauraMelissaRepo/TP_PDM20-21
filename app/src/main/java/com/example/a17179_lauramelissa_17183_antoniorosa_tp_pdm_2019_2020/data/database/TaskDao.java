@@ -21,7 +21,7 @@ public interface TaskDao {
 
     //Atualizar uma tarefa
     @Update
-    void update(Task Task);
+    void update(Task updatedTask);
 
     //Query para ir buscar a lista de tarefa
     @Query("select * from task")

@@ -1,6 +1,7 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -12,7 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -135,12 +138,14 @@ public class MainActivity extends AppCompatActivity {
             return data.size();
         }
     }
+
+
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
         private final CheckBox isDone;
         private final TextView task_description;
-        private Task task;
         private CardView cardView;
+        private Task task;
 
         //utilizar o itemView para procurar os items
         public TaskViewHolder(@NonNull View itemView) {
@@ -155,6 +160,13 @@ public class MainActivity extends AppCompatActivity {
             this.isDone.setOnCheckedChangeListener((button, isChecked) -> {
                 this.task.setDone(isChecked);
                 TaskDatabase.getInstance(getApplicationContext()).taskDao().update(task);
+            });
+
+            this.cardView.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, EditTaskActivity.class);
+                intent.putExtra("taskId", this.task.getId());
+                intent.putExtra(EditTaskActivity.TASK_KEY, this.task_description.getText().toString());
+                startActivity(intent);
             });
 
             this.cardView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -188,6 +200,4 @@ public class MainActivity extends AppCompatActivity {
             this.isDone.setChecked(task.isDone());
         }
     }
-
-
 }

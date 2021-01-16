@@ -4,15 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Task;
-import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDao;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
@@ -33,9 +29,9 @@ public class CreateTaskActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Criar tarefa");
 
-        taskDescription = findViewById(R.id.task_description);
+        this.taskDescription = findViewById(R.id.task_description);
 
-        ExtendedFloatingActionButton btn = findViewById(R.id.add_task_btn);
+        ExtendedFloatingActionButton btn = findViewById(R.id.save_task_btn);
 
         btn.setOnClickListener(v -> {
             String description = taskDescription.getText().toString();

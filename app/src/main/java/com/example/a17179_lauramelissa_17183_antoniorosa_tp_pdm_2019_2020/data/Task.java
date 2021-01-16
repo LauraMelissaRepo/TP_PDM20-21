@@ -33,4 +33,8 @@ public class Task {
     public void setDone(boolean done){
         this.isDone = done;
     }
+
+    public void updateDescription(String task){
+        this.task = task;
+    }
 }
