@@ -26,12 +26,11 @@ import java.util.Date;
 
 public class CreatePeopleActivity extends AppCompatActivity {
 
-    private EditText namePersonCreate;
-    private EditText degreePersonCreate;
+    private EditText namePersonCreate, degreePersonCreate;
     private ImageView imageView;
     public static final int CAMERA_REQUEST_CODE = 2000;
     public static final int GALERY_REQUEST_CODE = 1000;
-    private String currentPhotoPath;
+    private String currentPhotoPath, pictureTakenPath;
     private File photoFile;
 
     @Override
@@ -61,9 +60,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
         addButton.setOnClickListener(v -> {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();
-            String path = "/avatarDefault.png";
-
-            People people = new People(0, namePerson, degreePerson, path);
+            People people = new People(0, namePerson, degreePerson, this.pictureTakenPath);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -86,12 +83,13 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                     this.imageView.setImageBitmap(bitmap);
-                    Toast.makeText(this, this.currentPhotoPath, Toast.LENGTH_LONG).show();
+                    this.pictureTakenPath = this.currentPhotoPath;
+                    Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
             } else {
-                Toast.makeText(this, "404 Pic Not Found", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
             }
         } else if (requestCode == GALERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -100,11 +98,11 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                this.currentPhotoPath = cursor.getString(columnIndex);
+                this.pictureTakenPath = cursor.getString(columnIndex);
                 this.imageView.setImageURI(selectedImage);
-                Toast.makeText(this, this.currentPhotoPath, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "404 Pic Not Found", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -145,7 +143,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(this.currentPhotoPath);
+        File f = new File(this.pictureTakenPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);

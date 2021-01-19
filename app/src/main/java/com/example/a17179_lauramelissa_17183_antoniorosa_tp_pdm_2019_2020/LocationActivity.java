@@ -20,6 +20,7 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
+        bottomNav.setSelectedItemId(R.id.nav_map);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         this.toolbar = findViewById(R.id.toolbar);
@@ -28,9 +29,7 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-        new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            item -> {
                 Intent resultIntent = null;
                 switch (item.getItemId()) {
                     case R.id.nav_tasks:
@@ -40,9 +39,11 @@ public class LocationActivity extends AppCompatActivity {
                         resultIntent = new Intent(LocationActivity.this, PeopleActivity.class);
                         break;
                 }
-                startActivity(resultIntent);
-                LocationActivity.this.finish();
-                return true;
-            }
-        };
+                if (resultIntent != null){
+                    startActivity(resultIntent);
+                    LocationActivity.this.finish();
+                    return true;
+                }
+                return false;
+            };
 }

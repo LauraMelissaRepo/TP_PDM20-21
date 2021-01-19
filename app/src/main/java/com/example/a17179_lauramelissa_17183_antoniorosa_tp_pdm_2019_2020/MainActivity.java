@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
+        bottomNav.setSelectedItemId(R.id.nav_tasks);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         this.toolbar = findViewById(R.id.toolbar);
@@ -71,9 +72,7 @@ public class MainActivity extends AppCompatActivity {
      * consoante isso mostra a atividade correspondente
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-        new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            item -> {
                 Intent resultIntent = null;
                 switch (item.getItemId()) {
                     case R.id.nav_people:
@@ -83,11 +82,13 @@ public class MainActivity extends AppCompatActivity {
                         resultIntent = new Intent(MainActivity.this, LocationActivity.class);
                         break;
                 }
-                startActivity(resultIntent);
-                MainActivity.this.finish();
-                return true;
-            }
-        };
+                if (resultIntent != null){
+                    startActivity(resultIntent);
+                    MainActivity.this.finish();
+                    return true;
+                }
+                return false;
+            };
 
 
     /**

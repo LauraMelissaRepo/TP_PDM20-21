@@ -37,6 +37,7 @@ public class PeopleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_people);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
+        bottomNav.setSelectedItemId(R.id.nav_people);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -150,8 +151,11 @@ public class PeopleActivity extends AppCompatActivity {
                         resultIntent = new Intent(PeopleActivity.this, LocationActivity.class);
                         break;
                 }
-                startActivity(resultIntent);
-                PeopleActivity.this.finish();
-                return true;
+                if (resultIntent != null){
+                    startActivity(resultIntent);
+                    PeopleActivity.this.finish();
+                    return true;
+                }
+                return false;
             };
 }
