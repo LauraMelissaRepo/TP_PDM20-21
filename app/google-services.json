@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "338894227294",
-    "project_id": "pdm-20-21-en",
-    "storage_bucket": "pdm-20-21-en.appspot.com"
+    "project_number": "443491786632",
+    "project_id": "pdm-20-21-en-b4e6b",
+    "storage_bucket": "pdm-20-21-en-b4e6b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:338894227294:android:b14d91c8ee735b4350f1cf",
+        "mobilesdk_app_id": "1:443491786632:android:a49551dd4ecb21492ee43d",
         "android_client_info": {
           "package_name": "com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020"
         }
       },
       "oauth_client": [
         {
-          "client_id": "338894227294-0ag40sc4ha6gl0k14o3rmg9i54bdko07.apps.googleusercontent.com",
+          "client_id": "443491786632-1upqrb0dlk6dr6mug9226icob6kqeftv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDeOKu5tqYr71HGih-uQkZuv-ZiZIPGw_k"
+          "current_key": "AIzaSyAmDbwdRu-Ui_rmqdAAzjcZu9j5yDlfIPI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "338894227294-0ag40sc4ha6gl0k14o3rmg9i54bdko07.apps.googleusercontent.com",
+              "client_id": "443491786632-1upqrb0dlk6dr6mug9226icob6kqeftv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

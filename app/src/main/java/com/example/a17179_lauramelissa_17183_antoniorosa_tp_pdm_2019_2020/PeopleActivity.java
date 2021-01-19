@@ -50,7 +50,7 @@ public class PeopleActivity extends AppCompatActivity {
         this.peopleAdapter = new PeopleAdapter();
 
         peopleList.setLayoutManager(layoutManager);
-        peopleList.setAdapter(this.peopleAdapter);
+        peopleList.setAdapter(peopleAdapter);
 
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, CreatePeopleActivity.class);
@@ -67,9 +67,11 @@ public class PeopleActivity extends AppCompatActivity {
                 .addSnapshotListener(this, (value, error) -> {
                     if(error == null){
                         List<People> people = value.toObjects(People.class);
-                        this.peopleAdapter.setData(people);
+                        String string = "" + people.size();
+                        Toast.makeText(getApplicationContext(), string + " Existe e chegou", Toast.LENGTH_LONG).show();
+                        peopleAdapter.setData(people);
                     }else{
-
+                        Toast.makeText(getApplicationContext(), "Não há nada", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -125,13 +127,13 @@ public class PeopleActivity extends AppCompatActivity {
 
         public void bind(People people){
             this.people = people;
+            String imgPath = people.getImgPath();
 
-            File img = new File("avatar-372-456324.png");
+            File img = new File(imgPath);
             if (img.exists()){
                 Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
                 this.picturePerson.setImageBitmap(bitmap);
             }
-
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());
         }

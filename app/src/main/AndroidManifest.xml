@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
+    <uses-feature
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="true"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020">
-        <activity android:name=".CreatePeopleActivity"></activity>
+        <activity android:name=".CreatePeopleActivity" />
         <activity android:name=".EditTaskActivity" />
         <activity android:name=".LocationActivity" />
         <activity android:name=".PeopleActivity" />
@@ -21,6 +28,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
-
 </manifest>
