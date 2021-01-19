@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="5dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/namePersonCreateEdit"
@@ -28,7 +29,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/namePersonCreate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="5dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/degreePersonCreateEdit"
@@ -40,10 +42,17 @@
 
     <Button
         android:id="@+id/createPeopleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="106dp"
+        android:layout_height="58dp"
+        android:layout_margin="5dp"
         android:layout_weight="1"
         android:text="Criar"
+        android:textSize="11sp"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"
+        app:icon="?android:attr/textCheckMark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -55,7 +64,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/takePicture"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_margin="10dp"/>
 
     <Button
         android:id="@+id/takePicture"
@@ -65,7 +75,11 @@
         android:layout_marginLeft="10dp"
         android:text="Tirar Imagem"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/degreePersonCreate" />
+        app:layout_constraintTop_toBottomOf="@+id/degreePersonCreate"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"/>
 
     <Button
         android:id="@+id/selectPicture"
@@ -75,16 +89,25 @@
         android:layout_marginRight="10dp"
         android:text="Escolher Imagem"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/degreePersonCreate" />
+        app:layout_constraintTop_toBottomOf="@+id/degreePersonCreate"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"/>
 
     <Button
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
+        android:layout_marginTop="10dp"
         android:text="Localização"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
