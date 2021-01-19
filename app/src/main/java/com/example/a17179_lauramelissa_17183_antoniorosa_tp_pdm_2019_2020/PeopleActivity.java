@@ -110,7 +110,6 @@ public class PeopleActivity extends AppCompatActivity {
         private final ImageView picturePerson;
         private final TextView namePerson;
         private final TextView degreePerson;
-        private final Button buttonMap;
         private People people;
 
         public PeopleViewHolder(@NonNull View itemView){
@@ -118,9 +117,9 @@ public class PeopleActivity extends AppCompatActivity {
             this.picturePerson = itemView.findViewById(R.id.picturePerson);
             this.namePerson = itemView.findViewById(R.id.namePerson);
             this.degreePerson = itemView.findViewById(R.id.degreePerson);
-            this.buttonMap = itemView.findViewById(R.id.buttonMap);
+            Button buttonMap = itemView.findViewById(R.id.buttonMap);
 
-            this.buttonMap.setOnClickListener(v -> {
+            buttonMap.setOnClickListener(v -> {
                 String string = "ButtonMap clicked: " + people.getId();
                 Toast.makeText(getApplicationContext(), string, Toast.LENGTH_LONG).show();
             });

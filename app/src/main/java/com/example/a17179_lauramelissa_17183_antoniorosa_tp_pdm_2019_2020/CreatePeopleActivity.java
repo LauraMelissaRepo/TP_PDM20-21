@@ -60,6 +60,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
         addButton.setOnClickListener(v -> {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();
+
             People people = new People(0, namePerson, degreePerson, this.pictureTakenPath);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
