@@ -1,9 +1,14 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +24,12 @@ import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,16 +56,54 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
         Button takePictureButton = findViewById(R.id.takePicture);
         takePictureButton.setOnClickListener(v -> {
-            Intent intentTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Uri photoUri = createFile();
-            intentTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intentTakePicture, CAMERA_REQUEST_CODE);
+            Dexter.withActivity(this)
+                    .withPermission(Manifest.permission.CAMERA)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            Intent intentTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            Uri photoUri = createFile();
+                            intentTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                            startActivityForResult(intentTakePicture, CAMERA_REQUEST_CODE);
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            if (response.isPermanentlyDenied()){
+                                showSettingsDialog();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                        }
+                    }).check();
         });
 
         Button selectPictureButton = findViewById(R.id.selectPicture);
         selectPictureButton.setOnClickListener(v -> {
-            Intent intentSelectPicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intentSelectPicture, GALERY_REQUEST_CODE);
+            Dexter.withActivity(this)
+                    .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            Intent intentSelectPicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(intentSelectPicture, GALERY_REQUEST_CODE);
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            if (response.isPermanentlyDenied()){
+                                showSettingsDialog();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                            token.continuePermissionRequest();
+                        }
+                    }).check();
         });
 
         Button addButton = findViewById(R.id.createPeopleButton);
@@ -149,4 +199,26 @@ public class CreatePeopleActivity extends AppCompatActivity {
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
+
+    private void showSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
+        builder.setTitle("Need Permissions");
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
+            dialog.cancel();
+            openSettings();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+
+    }
+
+    // navigating user to app settings
+    private void openSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, 101);
+    }
+
 }
