@@ -3,12 +3,9 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -111,7 +108,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();
 
-            People people = new People(0, namePerson, degreePerson, this.pictureTakenPath);
+            People people = new People(namePerson, degreePerson, this.pictureTakenPath);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -220,5 +217,4 @@ public class CreatePeopleActivity extends AppCompatActivity {
         intent.setData(uri);
         startActivityForResult(intent, 101);
     }
-
 }

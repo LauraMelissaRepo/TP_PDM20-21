@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,9 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
+import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Task;
+import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.Document;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,14 +72,15 @@ public class PeopleActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        refreshData();
+    }
 
+    private void refreshData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("peoples")
                 .addSnapshotListener(this, (value, error) -> {
                     if(error == null){
                         List<People> people = value.toObjects(People.class);
-                        String string = "" + people.size();
-                        Toast.makeText(getApplicationContext(), string + " Existe e chegou", Toast.LENGTH_LONG).show();
                         peopleAdapter.setData(people);
                     }else{
                         Toast.makeText(getApplicationContext(), "Não há nada", Toast.LENGTH_LONG).show();
@@ -112,6 +122,7 @@ public class PeopleActivity extends AppCompatActivity {
         private final TextView namePerson;
         private final TextView degreePerson;
         private People people;
+        private int positionClicked;
 
         public PeopleViewHolder(@NonNull View itemView){
             super(itemView);
@@ -121,8 +132,37 @@ public class PeopleActivity extends AppCompatActivity {
             Button buttonMap = itemView.findViewById(R.id.buttonMap);
 
             buttonMap.setOnClickListener(v -> {
-                String string = "ButtonMap clicked: " + people.getId();
-                Toast.makeText(getApplicationContext(), string, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "MAPA CLICADO", Toast.LENGTH_LONG).show();
+            });
+
+//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    FirebaseFirestore fb = FirebaseFirestore.getInstance();
+//                    fb.collection("peoples")
+//                            .document()
+//                            .delete();
+//                    return true;
+//                }
+//            });
+
+            itemView.setOnLongClickListener(v -> {
+                this.positionClicked = getAdapterPosition();
+//                FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                db.collection("peoples").get().addOnCompleteListener(task -> {
+//                    List<String> ids = new ArrayList<>();
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            String id = document.getId();
+//                            ids.add(id);
+//                        }
+//                    }
+//                    for (int i = 0; i < ids.size(); i ++){
+//                        Log.d(ids.get(i));
+//                    }
+//                });
+                showDialog();
+                return false;
             });
         }
 
@@ -134,6 +174,9 @@ public class PeopleActivity extends AppCompatActivity {
             if (img.exists()){
                 Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
                 this.picturePerson.setImageBitmap(bitmap);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "erro a carregar a imagem", Toast.LENGTH_LONG).show();
             }
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());
@@ -158,4 +201,25 @@ public class PeopleActivity extends AppCompatActivity {
                 }
                 return false;
             };
+
+    private void showDialog() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(PeopleActivity.this);
+        builder.setTitle("Eliminar contacto");
+        builder.setMessage("Caso deseje eliminar este contacto, pressione sim.");
+        builder.setPositiveButton("Sim", (dialog, which) -> {
+            deleteItem();
+            dialog.cancel();
+
+        });
+        builder.setNegativeButton("Não", (dialog, which) -> dialog.cancel());
+        builder.show();
+
+    }
+
+    private void deleteItem(){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection("peoples")
+                .document()
+                .delete();
+    }
 }
