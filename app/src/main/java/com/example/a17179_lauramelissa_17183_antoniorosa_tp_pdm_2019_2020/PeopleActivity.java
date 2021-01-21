@@ -24,9 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
-import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Task;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
@@ -43,6 +43,8 @@ import java.util.List;
 public class PeopleActivity extends AppCompatActivity {
 
     private PeopleAdapter peopleAdapter;
+    private List<String> ids;
+    private static final String TAG = "Não Sei";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,17 @@ public class PeopleActivity extends AppCompatActivity {
                         peopleAdapter.setData(people);
                     }else{
                         Toast.makeText(getApplicationContext(), "Não há nada", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        this.ids = new ArrayList<>();
+        db.collection("peoples")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            this.ids.add(document.getId());
+                        }
                     }
                 });
     }
@@ -138,33 +151,21 @@ public class PeopleActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "MAPA CLICADO", Toast.LENGTH_LONG).show();
             });
 
-//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    FirebaseFirestore fb = FirebaseFirestore.getInstance();
-//                    fb.collection("peoples")
-//                            .document()
-//                            .delete();
-//                    return true;
-//                }
-//            });
-
             itemView.setOnLongClickListener(v -> {
                 this.positionClicked = getAdapterPosition();
-//                FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                db.collection("peoples").get().addOnCompleteListener(task -> {
-//                    List<String> ids = new ArrayList<>();
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            String id = document.getId();
-//                            ids.add(id);
-//                        }
-//                    }
-//                    for (int i = 0; i < ids.size(); i ++){
-//                        Log.d(ids.get(i));
-//                    }
-//                });
-                showDialog();
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(PeopleActivity.this);
+                alertDialog.setTitle("Eliminar contacto");
+                alertDialog.setMessage("Caso deseje eliminar este contacto, pressione sim.");
+                alertDialog.setPositiveButton("Sim", (dialog, which) -> {
+                   deleteItem(this.positionClicked);
+                   dialog.cancel();
+                });
+                alertDialog.setNegativeButton("Não", (dialog, which) -> {
+                    dialog.cancel();
+                });
+                alertDialog.show();
+
                 return false;
             });
         }
@@ -185,7 +186,7 @@ public class PeopleActivity extends AppCompatActivity {
                 int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_UNDEFINED);
 
-                Bitmap rotatedBitmap = null;
+                Bitmap rotatedBitmap;
                 switch(orientation) {
 
                     case ExifInterface.ORIENTATION_ROTATE_90:
@@ -235,25 +236,13 @@ public class PeopleActivity extends AppCompatActivity {
                 return false;
             };
 
-    private void showDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(PeopleActivity.this);
-        builder.setTitle("Eliminar contacto");
-        builder.setMessage("Caso deseje eliminar este contacto, pressione sim.");
-        builder.setPositiveButton("Sim", (dialog, which) -> {
-            deleteItem();
-            dialog.cancel();
-
-        });
-        builder.setNegativeButton("Não", (dialog, which) -> dialog.cancel());
-        builder.show();
-
-    }
-
-    private void deleteItem(){
+    private void deleteItem(int position){
+        String id = this.ids.get(position);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         fb.collection("peoples")
-                .document()
+                .document(id)
                 .delete();
+        this.ids.remove(position);
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
