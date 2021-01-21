@@ -9,6 +9,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -66,7 +68,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
                         @Override
                         public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if (response.isPermanentlyDenied()){
+                            if (response.isPermanentlyDenied()) {
                                 showSettingsDialog();
                             }
                         }
@@ -91,7 +93,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
                         @Override
                         public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if (response.isPermanentlyDenied()){
+                            if (response.isPermanentlyDenied()) {
                                 showSettingsDialog();
                             }
                         }
@@ -130,7 +132,29 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 Bitmap bitmap;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    this.imageView.setImageBitmap(bitmap);
+                    ExifInterface ei = new ExifInterface(this.currentPhotoPath);
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
+                    Bitmap rotatedBitmap = null;
+                    switch (orientation) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            rotatedBitmap = rotateImage(bitmap, 90);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            rotatedBitmap = rotateImage(bitmap, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            rotatedBitmap = rotateImage(bitmap, 270);
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            rotatedBitmap = bitmap;
+                    }
+
+                    this.imageView.setImageBitmap(rotatedBitmap);
                     this.pictureTakenPath = this.currentPhotoPath;
                     Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
                 } catch (IOException exception) {
@@ -216,5 +240,12 @@ public class CreatePeopleActivity extends AppCompatActivity {
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
         startActivityForResult(intent, 101);
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 }

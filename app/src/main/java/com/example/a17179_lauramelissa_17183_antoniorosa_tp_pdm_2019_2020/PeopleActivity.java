@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.model.Document;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,7 +176,37 @@ public class PeopleActivity extends AppCompatActivity {
             File img = new File(imgPath);
             if (img.exists()){
                 Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
-                this.picturePerson.setImageBitmap(bitmap);
+                ExifInterface ei = null;
+                try {
+                    ei = new ExifInterface(imgPath);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                Bitmap rotatedBitmap = null;
+                switch(orientation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotatedBitmap = rotateImage(bitmap, 90);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotatedBitmap = rotateImage(bitmap, 180);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotatedBitmap = rotateImage(bitmap, 270);
+                        break;
+
+                    case ExifInterface.ORIENTATION_NORMAL:
+                    default:
+                        rotatedBitmap = bitmap;
+                }
+
+
+                this.picturePerson.setImageBitmap(rotatedBitmap);
             }
             else{
                 Toast.makeText(getApplicationContext(), "erro a carregar a imagem", Toast.LENGTH_LONG).show();
@@ -221,5 +254,12 @@ public class PeopleActivity extends AppCompatActivity {
         fb.collection("peoples")
                 .document()
                 .delete();
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 }
