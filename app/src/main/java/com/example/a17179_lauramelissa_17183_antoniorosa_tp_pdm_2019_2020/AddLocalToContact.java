@@ -43,6 +43,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 public class AddLocalToContact extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private LatLng currentLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
-                        moveCameraCurrentLocation();
+                        addCurrentLocationMarker();
                     }
 
                     @Override
@@ -124,7 +125,7 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void moveCameraCurrentLocation(){
+    private void addCurrentLocationMarker(){
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -139,10 +140,15 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
             Location currentLocation = location;
-            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Localização Atual").icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.ic_baseline_my_location_24)));
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f);
+            this.currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(this.currentLatLng).title("Localização Atual").icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.ic_baseline_my_location_24)));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
             mMap.animateCamera(cameraUpdate);
         });
+    }
+
+    private void moveCameraCurrentLocation(){
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
+        mMap.animateCamera(cameraUpdate);
     }
 }
