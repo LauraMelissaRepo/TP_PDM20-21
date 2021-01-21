@@ -10,12 +10,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+
+import androidx.exifinterface.media.ExifInterface;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.type.LatLng;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -41,6 +45,8 @@ public class CreatePeopleActivity extends AppCompatActivity {
     private ImageView imageView;
     public static final int CAMERA_REQUEST_CODE = 2000;
     public static final int GALERY_REQUEST_CODE = 1000;
+    public static final int MAP_REQUEST_CODE = 3000;
+    private LatLng location;
     private String currentPhotoPath, pictureTakenPath;
     private File photoFile;
 
@@ -103,6 +109,12 @@ public class CreatePeopleActivity extends AppCompatActivity {
                             token.continuePermissionRequest();
                         }
                     }).check();
+        });
+
+        Button mapButton = findViewById(R.id.location);
+        mapButton.setOnClickListener(v -> {
+            Intent intentMap = new Intent(getApplicationContext(), AddLocalToContact.class);
+            startActivityForResult(intentMap, MAP_REQUEST_CODE);
         });
 
         Button addButton = findViewById(R.id.createPeopleButton);
@@ -176,6 +188,8 @@ public class CreatePeopleActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
             }
+        } else if (requestCode == MAP_REQUEST_CODE) {
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
