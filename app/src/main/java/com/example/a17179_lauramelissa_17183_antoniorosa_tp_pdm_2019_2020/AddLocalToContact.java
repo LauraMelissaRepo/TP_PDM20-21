@@ -26,9 +26,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
@@ -40,10 +42,15 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddLocalToContact extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LatLng currentLatLng;
+    private Marker lastMarker;
+    private String lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,25 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
                         token.continuePermissionRequest();
                     }
                 }).check();
+
+        mMap.setOnMapClickListener(latLng -> {
+            if (this.lastMarker != null) {
+                this.lastMarker.remove();
+            }
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            this.lastMarker = marker;
+            this.lat = "" + this.lastMarker.getPosition().latitude;
+            this.lng = "" + this.lastMarker.getPosition().longitude;
+        });
+
+        Button saveButton = findViewById(R.id.saveLocation);
+        saveButton.setOnClickListener(v -> {
+            Intent intent = getIntent();
+            intent.putExtra("lastMarkerLat", this.lat);
+            intent.putExtra("lastMarkerLng", this.lng);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
 
     private void showSettingsDialog() {
@@ -116,16 +142,16 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
         startActivityForResult(intent, 101);
     }
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId){
-        Drawable  vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0,0,vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getMinimumHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void addCurrentLocationMarker(){
+    private void addCurrentLocationMarker() {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -147,7 +173,7 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
         });
     }
 
-    private void moveCameraCurrentLocation(){
+    private void moveCameraCurrentLocation() {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
         mMap.animateCamera(cameraUpdate);
     }

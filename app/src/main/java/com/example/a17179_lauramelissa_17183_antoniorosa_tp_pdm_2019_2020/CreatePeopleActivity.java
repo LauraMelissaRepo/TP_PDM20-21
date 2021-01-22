@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,7 +47,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 2000;
     public static final int GALERY_REQUEST_CODE = 1000;
     public static final int MAP_REQUEST_CODE = 3000;
-    private LatLng location;
+    private String lat, lng;
     private String currentPhotoPath, pictureTakenPath;
     private File photoFile;
 
@@ -189,7 +190,10 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
             }
         } else if (requestCode == MAP_REQUEST_CODE) {
-
+            if(resultCode == RESULT_OK){
+                this.lat = data.getStringExtra("lastMarkerLat");
+                this.lng = data.getStringExtra("lastMarkerLng");
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
