@@ -28,11 +28,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.Button;
 
 import com.karumi.dexter.Dexter;
@@ -42,10 +40,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AddLocalToContact extends FragmentActivity implements OnMapReadyCallback {
+public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LatLng currentLatLng;
@@ -122,7 +117,7 @@ public class AddLocalToContact extends FragmentActivity implements OnMapReadyCal
     }
 
     private void showSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToContact.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
         builder.setTitle("Need Permissions");
         builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
         builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {

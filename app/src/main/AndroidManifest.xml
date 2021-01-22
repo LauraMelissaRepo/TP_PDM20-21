@@ -47,10 +47,14 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ShowLocationActivity"
-            android:label="@string/title_activity_show_location"></activity>
+            android:name=".EditLocationPeople"
+            android:label="@string/title_activity_edit_location_people"></activity>
+        <activity android:name=".EditPeopleActivity" />
         <activity
-            android:name=".AddLocalToContact"
+            android:name=".ShowLocationActivity"
+            android:label="@string/title_activity_show_location" />
+        <activity
+            android:name=".AddLocalToPeopleActivity"
             android:label="@string/title_activity_add_local_to_contact" />
         <activity android:name=".CreatePeopleActivity" />
         <activity android:name=".EditTaskActivity" />

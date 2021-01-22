@@ -18,8 +18,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/namePersonTextInputEdit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome" />
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,18 +34,17 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/degreePersonTextInputEdit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Grau Parentesco" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/editPeopleButton"
-        android:layout_width="106dp"
+        android:layout_width="115dp"
         android:layout_height="58dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:text="Criar"
+        android:text="Editar"
         android:textSize="11sp"
         android:textColor="@color/black"
         android:textColorHighlight="@android:color/darker_gray"

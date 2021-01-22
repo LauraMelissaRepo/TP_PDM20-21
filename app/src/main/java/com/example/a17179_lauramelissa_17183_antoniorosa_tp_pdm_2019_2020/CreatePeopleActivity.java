@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,8 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,7 +25,6 @@ import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.type.LatLng;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -57,14 +53,14 @@ public class CreatePeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_people);
 
-        this.namePersonCreate = findViewById(R.id.namePersonCreateEdit);
-        this.degreePersonCreate = findViewById(R.id.degreePersonCreateEdit);
-        this.imageView = findViewById(R.id.imageView);
+        this.namePersonCreate = findViewById(R.id.namePersonTextInputEdit);
+        this.degreePersonCreate = findViewById(R.id.degreePersonTextInputEdit);
+        this.imageView = findViewById(R.id.imageViewEdit);
         this.pictureTakenPath = "";
         this.lat = "";
         this.lng = "";
 
-        Button takePictureButton = findViewById(R.id.takePicture);
+        Button takePictureButton = findViewById(R.id.takePictureEdit);
         takePictureButton.setOnClickListener(v -> {
             Dexter.withActivity(this)
                     .withPermission(Manifest.permission.CAMERA)
@@ -91,7 +87,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     }).check();
         });
 
-        Button selectPictureButton = findViewById(R.id.selectPicture);
+        Button selectPictureButton = findViewById(R.id.selectPictureEdit);
         selectPictureButton.setOnClickListener(v -> {
             Dexter.withActivity(this)
                     .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -116,13 +112,13 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     }).check();
         });
 
-        Button mapButton = findViewById(R.id.location);
+        Button mapButton = findViewById(R.id.locationEdit);
         mapButton.setOnClickListener(v -> {
-            Intent intentMap = new Intent(getApplicationContext(), AddLocalToContact.class);
+            Intent intentMap = new Intent(getApplicationContext(), AddLocalToPeopleActivity.class);
             startActivityForResult(intentMap, MAP_REQUEST_CODE);
         });
 
-        Button addButton = findViewById(R.id.createPeopleButton);
+        Button addButton = findViewById(R.id.editPeopleButton);
         addButton.setOnClickListener(v -> {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();

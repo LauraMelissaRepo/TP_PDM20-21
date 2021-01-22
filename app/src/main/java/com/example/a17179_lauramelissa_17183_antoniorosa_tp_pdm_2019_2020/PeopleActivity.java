@@ -46,7 +46,6 @@ public class PeopleActivity extends AppCompatActivity {
 
     private PeopleAdapter peopleAdapter;
     private List<String> ids;
-    private static final String TAG = "Não Sei";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +164,31 @@ public class PeopleActivity extends AppCompatActivity {
                             intent.putExtra("Lng", documentSnapshot.getString("lng"));
                             intent.putExtra("Name", documentSnapshot.getString("namePerson"));
                             intent.putExtra("Degree", documentSnapshot.getString("degreePerson"));
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "erro a carregar localização", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            });
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                String id = getIdDocument(position);
+
+                FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = fb.collection("peoples").document(id);
+                documentReference.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot != null){
+                            Intent intent = new Intent(PeopleActivity.this,EditPeopleActivity.class);
+                            intent.putExtra("DocumentID", id);
+                            intent.putExtra("Lat", documentSnapshot.getString("lat"));
+                            intent.putExtra("Lng", documentSnapshot.getString("lng"));
+                            intent.putExtra("Name", documentSnapshot.getString("namePerson"));
+                            intent.putExtra("Degree", documentSnapshot.getString("degreePerson"));
+                            intent.putExtra("ImgPath", documentSnapshot.getString("imgPath"));
                             startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), "erro a carregar localização", Toast.LENGTH_LONG).show();
