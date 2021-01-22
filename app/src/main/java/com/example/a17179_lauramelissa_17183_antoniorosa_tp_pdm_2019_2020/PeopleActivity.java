@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -148,7 +150,27 @@ public class PeopleActivity extends AppCompatActivity {
             Button buttonMap = itemView.findViewById(R.id.buttonMap);
 
             buttonMap.setOnClickListener(v -> {
-                Toast.makeText(getApplicationContext(), "MAPA CLICADO", Toast.LENGTH_LONG).show();
+                int position = getAdapterPosition();
+                Log.d("ID BOTAO", "" + position);
+                String id = getIdDocument(position);
+
+                FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = fb.collection("peoples").document(id);
+                documentReference.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot != null){
+                            Intent intent = new Intent(PeopleActivity.this,ShowLocationActivity.class);
+                            intent.putExtra("Lat", documentSnapshot.getString("lat"));
+                            intent.putExtra("Lng", documentSnapshot.getString("lng"));
+                            intent.putExtra("Name", documentSnapshot.getString("namePerson"));
+                            intent.putExtra("Degree", documentSnapshot.getString("degreePerson"));
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "erro a carregar localização", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             });
 
             itemView.setOnLongClickListener(v -> {
@@ -250,5 +272,9 @@ public class PeopleActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    private String getIdDocument(int position){
+        return this.ids.get(position);
     }
 }

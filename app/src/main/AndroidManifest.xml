@@ -47,6 +47,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".ShowLocationActivity"
+            android:label="@string/title_activity_show_location"></activity>
+        <activity
             android:name=".AddLocalToContact"
             android:label="@string/title_activity_add_local_to_contact" />
         <activity android:name=".CreatePeopleActivity" />

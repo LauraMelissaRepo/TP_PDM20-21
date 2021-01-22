@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -59,6 +60,9 @@ public class CreatePeopleActivity extends AppCompatActivity {
         this.namePersonCreate = findViewById(R.id.namePersonCreateEdit);
         this.degreePersonCreate = findViewById(R.id.degreePersonCreateEdit);
         this.imageView = findViewById(R.id.imageView);
+        this.pictureTakenPath = "";
+        this.lat = "";
+        this.lng = "";
 
         Button takePictureButton = findViewById(R.id.takePicture);
         takePictureButton.setOnClickListener(v -> {
@@ -123,147 +127,164 @@ public class CreatePeopleActivity extends AppCompatActivity {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();
 
-            People people = new People(namePerson, degreePerson, this.pictureTakenPath);
+            if (namePerson.equals("")
+                    || degreePerson.equals("")
+                    || this.lat.equals("")
+                    || this.lng.equals("")
+                    || this.pictureTakenPath.equals("")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                builder.setTitle("Erro");
+                builder.setMessage("Para criar contacto, tem que ter toda a informação");
+                builder.setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } else{
+                    People people = new People(namePerson, degreePerson, this.pictureTakenPath, this.lat, this.lng);
 
-            db.collection("peoples")
-                    .add(people)
-                    .addOnSuccessListener(this, documentReference -> {
-                        Toast.makeText(getApplicationContext(), "Chegou", Toast.LENGTH_LONG).show();
-                    });
-            galleryAddPic();
-            finish();
-        });
-    }
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Uri uri = Uri.fromFile(this.photoFile);
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    ExifInterface ei = new ExifInterface(this.currentPhotoPath);
-                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                    db.collection("peoples")
+                            .add(people)
+                            .addOnSuccessListener(this, documentReference -> {
+                                Toast.makeText(getApplicationContext(), "Chegou", Toast.LENGTH_LONG).show();
+                            });
+                    galleryAddPic();
+                    finish();
+                }
+            });
+        }
 
-                    Bitmap rotatedBitmap = null;
-                    switch (orientation) {
-                        case ExifInterface.ORIENTATION_ROTATE_90:
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
+        @Override
+        protected void onActivityResult ( int requestCode, int resultCode, @Nullable Intent data){
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                if (resultCode == RESULT_OK) {
+                    Uri uri = Uri.fromFile(this.photoFile);
+                    Bitmap bitmap;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        ExifInterface ei = new ExifInterface(this.currentPhotoPath);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
-                        case ExifInterface.ORIENTATION_ROTATE_180:
-                            rotatedBitmap = rotateImage(bitmap, 180);
-                            break;
+                        Bitmap rotatedBitmap = null;
+                        switch (orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotateImage(bitmap, 90);
+                                break;
 
-                        case ExifInterface.ORIENTATION_ROTATE_270:
-                            rotatedBitmap = rotateImage(bitmap, 270);
-                            break;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotateImage(bitmap, 180);
+                                break;
 
-                        case ExifInterface.ORIENTATION_NORMAL:
-                        default:
-                            rotatedBitmap = bitmap;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotateImage(bitmap, 270);
+                                break;
+
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+
+                        this.imageView.setImageBitmap(rotatedBitmap);
+                        this.pictureTakenPath = this.currentPhotoPath;
+                        Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
                     }
-
-                    this.imageView.setImageBitmap(rotatedBitmap);
-                    this.pictureTakenPath = this.currentPhotoPath;
+                } else {
+                    Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
+                }
+            } else if (requestCode == GALERY_REQUEST_CODE) {
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    this.pictureTakenPath = cursor.getString(columnIndex);
+                    this.imageView.setImageURI(selectedImage);
                     Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
+                } else {
+                    Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
+                }
+            } else if (requestCode == MAP_REQUEST_CODE) {
+                if (resultCode == RESULT_OK) {
+                    this.lat = data.getStringExtra("lastMarkerLat");
+                    this.lng = data.getStringExtra("lastMarkerLng");
+                } else {
                 }
             } else {
-                Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else if (requestCode == GALERY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                this.pictureTakenPath = cursor.getString(columnIndex);
-                this.imageView.setImageURI(selectedImage);
-                Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
+        }
+
+        private Uri createFile () {
+            this.photoFile = null;
+            try {
+                this.photoFile = createImageFile();
+            } catch (Exception exception) {
+                //Error ocurred while creating the File
             }
-        } else if (requestCode == MAP_REQUEST_CODE) {
-            if(resultCode == RESULT_OK){
-                this.lat = data.getStringExtra("lastMarkerLat");
-                this.lng = data.getStringExtra("lastMarkerLng");
+            //Continue only if the File was sucessfully created
+            if (this.photoFile != null) {
+                Uri photoUri = FileProvider.getUriForFile(this,
+                        "com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.fileprovider",
+                        this.photoFile);
+                return photoUri;
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+            return null;
+        }
+
+        private File createImageFile () throws Exception {
+            // Create an image file name
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = "JPEG_" + timeStamp + "_";
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(
+                    imageFileName,
+                    ".jpg",
+                    storageDir
+            );
+            //Save a file: path for use with ACTION_VIEW intents
+            this.currentPhotoPath = image.getAbsolutePath();
+            return image;
+        }
+
+        private void galleryAddPic () {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File f = new File(this.pictureTakenPath);
+            Uri contentUri = Uri.fromFile(f);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+        }
+
+        private void showSettingsDialog () {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
+            builder.setTitle("Need Permissions");
+            builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+            builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
+                dialog.cancel();
+                openSettings();
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
+
+        }
+
+        // navigating user to app settings
+        private void openSettings () {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivityForResult(intent, 101);
+        }
+
+        public static Bitmap rotateImage (Bitmap source,float angle){
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle);
+            return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                    matrix, true);
         }
     }
-
-    private Uri createFile() {
-        this.photoFile = null;
-        try {
-            this.photoFile = createImageFile();
-        } catch (Exception exception) {
-            //Error ocurred while creating the File
-        }
-        //Continue only if the File was sucessfully created
-        if (this.photoFile != null) {
-            Uri photoUri = FileProvider.getUriForFile(this,
-                    "com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.fileprovider",
-                    this.photoFile);
-            return photoUri;
-        }
-        return null;
-    }
-
-    private File createImageFile() throws Exception {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
-        //Save a file: path for use with ACTION_VIEW intents
-        this.currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(this.pictureTakenPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    private void showSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
-            dialog.cancel();
-            openSettings();
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
-
-    }
-
-    // navigating user to app settings
-    private void openSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivityForResult(intent, 101);
-    }
-
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
-    }
-}

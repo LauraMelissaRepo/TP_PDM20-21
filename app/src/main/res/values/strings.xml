@@ -9,4 +9,5 @@
     <string name="no">Não</string>
     <string name="questionToDelete">Deseja eliminar esta tarefa?</string>
     <string name="title_activity_add_local_to_contact">Map</string>
+    <string name="title_activity_show_location">Map</string>
 </resources>
