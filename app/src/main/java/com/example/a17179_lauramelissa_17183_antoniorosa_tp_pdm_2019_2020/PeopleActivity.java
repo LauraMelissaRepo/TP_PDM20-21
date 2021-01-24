@@ -134,9 +134,9 @@ public class PeopleActivity extends AppCompatActivity {
         public PeopleViewHolder(@NonNull View itemView){
             super(itemView);
             this.picturePerson = itemView.findViewById(R.id.picturePerson);
-            this.namePerson = itemView.findViewById(R.id.name_person);
+            this.namePerson = itemView.findViewById(R.id.namePerson);
             this.degreePerson = itemView.findViewById(R.id.degreePerson);
-            Button buttonMap = itemView.findViewById(R.id.button_map);
+            Button buttonMap = itemView.findViewById(R.id.buttonMap);
 
             buttonMap.setOnClickListener(v -> {
                 int position = getAdapterPosition();

@@ -40,12 +40,12 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_map"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMap"
             app:layout_constraintStart_toEndOf="@+id/picturePerson"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/name_person"
+                android:id="@+id/namePerson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="1"
@@ -64,7 +64,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_map"
+            android:id="@+id/buttonMap"
             android:layout_width="50dp"
             android:layout_height="60dp"
             android:adjustViewBounds="true"
