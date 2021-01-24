@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/save_task_btn"
+        android:id="@+id/save_location_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -32,21 +32,20 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="52dp"
         app:cardBackgroundColor="@color/cardview_shadow_end_color"
         app:contentPaddingBottom="24dp"
         app:contentPaddingLeft="24dp"
         app:contentPaddingRight="24dp"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/save_task_btn"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.13">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,13 +66,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintBottom_toTopOf="@id/add_location_map"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="NotSibling">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/location_description"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Escreva aqui a sua tarefa"
+                    android:hint="Local"
                     android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,6 +83,34 @@
 
     </androidx.cardview.widget.CardView>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/add_location_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="268dp"
+        android:text="Abrir mapa"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"
+        app:icon="@drawable/ic_baseline_location_on_24"
+        app:layout_constraintBottom_toTopOf="@+id/save_location_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="0.905" />
+
+    <TextView
+        android:id="@+id/text_saved_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/save_location_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_location_map"
+        app:layout_constraintVertical_bias="0.193" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

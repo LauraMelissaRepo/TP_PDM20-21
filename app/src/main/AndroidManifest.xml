@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -33,7 +32,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020">
-
+        <activity android:name=".CreateLocationActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -48,7 +47,7 @@
 
         <activity
             android:name=".EditLocationPeople"
-            android:label="@string/title_activity_edit_location_people"></activity>
+            android:label="@string/title_activity_edit_location_people" />
         <activity android:name=".EditPeopleActivity" />
         <activity
             android:name=".ShowLocationActivity"

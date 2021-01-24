@@ -188,7 +188,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                         exception.printStackTrace();
                     }
                 }
-            } else if (requestCode == GALERY_REQUEST_CODE) {
+            } else if (requestCode == this.GALERY_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -202,7 +202,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     this.pictureTakenPath = cursor.getString(columnIndex);
                     this.imageView.setImageURI(selectedImage);
                 }
-            } else if (requestCode == MAP_REQUEST_CODE) {
+            } else if (requestCode == this.MAP_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     this.lat = data.getStringExtra("lastMarkerLat");
                     this.lng = data.getStringExtra("lastMarkerLng");

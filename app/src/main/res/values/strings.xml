@@ -31,4 +31,5 @@
     <string name="stringLocationCreatePeople">Localização</string>
     <string name="stringSaveLocationCreateLocation">Guardar</string>
     <string name="stringEditButtonEditPeople">Editar</string>
+    <string name="createLocation">Criar local</string>
 </resources>
