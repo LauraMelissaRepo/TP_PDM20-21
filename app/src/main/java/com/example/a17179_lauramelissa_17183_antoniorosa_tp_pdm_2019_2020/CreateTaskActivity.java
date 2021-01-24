@@ -29,7 +29,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Criar tarefa");
 
-        this.taskDescription = findViewById(R.id.location_description);
+        this.taskDescription = findViewById(R.id.task_description);
 
         ExtendedFloatingActionButton btn = findViewById(R.id.save_task_btn);
 

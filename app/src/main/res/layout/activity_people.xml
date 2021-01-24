@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         app:backgroundTint="#373636"
+        app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav_menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
