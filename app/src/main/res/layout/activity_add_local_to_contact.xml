@@ -45,7 +45,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:padding="8dp"
-        android:text="Guardar"
+        android:text="@string/stringSaveLocationCreateLocation"
         app:backgroundTint="#4F000000"
         android:textColor="@color/black"/>
 

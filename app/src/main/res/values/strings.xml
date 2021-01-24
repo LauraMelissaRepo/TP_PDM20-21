@@ -11,4 +11,24 @@
     <string name="title_activity_add_local_to_contact">Map</string>
     <string name="title_activity_show_location">Map</string>
     <string name="title_activity_edit_location_people">Map</string>
+    <string name="deletePeopleTitleAlertDialog">Eliminar contacto</string>
+    <string name="deletePeopleMessageAlertDialog">Caso deseje eliminar este contacto, pressione sim.</string>
+    <string name="positiveButtonDeletePeopleAlertDialog">Sim</string>
+    <string name="negativeButtonDeletePeopleAlertDialog">Não</string>
+    <string name="showSettingDialogTitle">Precisa permissões</string>
+    <string name="showSettingsDialogMessage">Esta aplicação precisa de permissões para usar esta funcionalidade. Pode garantir a partir das definições da aplicação.</string>
+    <string name="showSettingsDialogPositiveButton">Ir às definições</string>
+    <string name="showSettingsDialogNegativeButton">Cancelar</string>
+    <string name="errorCreatePeopleTitleAlertDialog">Erro</string>
+    <string name="errorCreatePeopleMessageAlertDialog">Para criar contacto, tem que preencher toda a informação.</string>
+    <string name="errorCreatePeoplePositiveButtonAlertDialog">Ok</string>
+    <string name="markerTitleAtualLocation">Localização Atual</string>
+    <string name="stringNameCreatePeople">Nome</string>
+    <string name="stringDegreeCreatePeople">Grau Parentesco</string>
+    <string name="stringCreateButtonCreatePeople">Criar</string>
+    <string name="stringTakePictureCreatePeople">Tirar Imagem</string>
+    <string name="stringTakeGalleryCreatePeople">Escolher Imagem</string>
+    <string name="stringLocationCreatePeople">Localização</string>
+    <string name="stringSaveLocationCreateLocation">Guardar</string>
+    <string name="stringEditButtonEditPeople">Editar</string>
 </resources>

@@ -19,7 +19,7 @@
             android:id="@+id/namePersonTextInputEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nome" />
+            android:hint="@string/stringNameCreatePeople" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,7 +36,7 @@
             android:id="@+id/degreePersonTextInputEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Grau Parentesco" />
+            android:hint="@string/stringDegreeCreatePeople" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,7 +46,7 @@
         android:layout_height="58dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:text="Criar"
+        android:text="@string/stringCreateButtonCreatePeople"
         android:textSize="11sp"
         android:textColor="@color/black"
         android:textColorHighlight="@android:color/darker_gray"
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:text="Tirar Imagem"
+        android:text="@string/stringTakePictureCreatePeople"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit"
         android:textColor="@color/black"
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:text="Escolher Imagem"
+        android:text="@string/stringTakeGalleryCreatePeople"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit"
         android:textColor="@color/black"
@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
         android:layout_marginTop="10dp"
-        android:text="Localização"
+        android:text="@string/stringLocationCreatePeople"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

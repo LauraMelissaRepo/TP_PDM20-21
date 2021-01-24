@@ -21,7 +21,6 @@ import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -61,56 +60,55 @@ public class CreatePeopleActivity extends AppCompatActivity {
         this.lng = "";
 
         Button takePictureButton = findViewById(R.id.takePictureEdit);
-        takePictureButton.setOnClickListener(v -> {
-            Dexter.withActivity(this)
-                    .withPermission(Manifest.permission.CAMERA)
-                    .withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-                            Intent intentTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            Uri photoUri = createFile();
-                            intentTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                            startActivityForResult(intentTakePicture, CAMERA_REQUEST_CODE);
-                        }
+        takePictureButton.setOnClickListener(v -> Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        Intent intentTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        Uri photoUri = createFile();
+                        intentTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                        startActivityForResult(intentTakePicture, CAMERA_REQUEST_CODE);
+                    }
 
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if (response.isPermanentlyDenied()) {
-                                showSettingsDialog();
-                            }
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        if (response.isPermanentlyDenied()) {
+                            showSettingsDialog();
                         }
+                    }
 
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
+                                                                   PermissionToken token) {
 
-                        }
-                    }).check();
-        });
+                    }
+                }).check());
 
         Button selectPictureButton = findViewById(R.id.selectPictureEdit);
-        selectPictureButton.setOnClickListener(v -> {
-            Dexter.withActivity(this)
-                    .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-                            Intent intentSelectPicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(intentSelectPicture, GALERY_REQUEST_CODE);
-                        }
+        selectPictureButton.setOnClickListener(v -> Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        Intent intentSelectPicture = new Intent(Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intentSelectPicture, GALERY_REQUEST_CODE);
+                    }
 
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if (response.isPermanentlyDenied()) {
-                                showSettingsDialog();
-                            }
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        if (response.isPermanentlyDenied()) {
+                            showSettingsDialog();
                         }
+                    }
 
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                            token.continuePermissionRequest();
-                        }
-                    }).check();
-        });
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
+                                                                   PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check());
 
         Button mapButton = findViewById(R.id.locationEdit);
         mapButton.setOnClickListener(v -> {
@@ -130,23 +128,23 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     || this.pictureTakenPath.equals("")) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
 
-                builder.setTitle("Erro");
-                builder.setMessage("Para criar contacto, tem que ter toda a informação");
-                builder.setPositiveButton("Ok", (dialog, which) -> {
-                    dialog.cancel();
-                });
+                builder.setTitle(R.string.errorCreatePeopleTitleAlertDialog);
+                builder.setMessage(R.string.errorCreatePeopleMessageAlertDialog);
+                builder.setPositiveButton(R.string.errorCreatePeoplePositiveButtonAlertDialog,
+                        (dialog, which) -> dialog.cancel());
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else{
-                    People people = new People(namePerson, degreePerson, this.pictureTakenPath, this.lat, this.lng);
+                    People people = new People(namePerson,
+                            degreePerson,
+                            this.pictureTakenPath,
+                            this.lat,
+                            this.lng);
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                     db.collection("peoples")
-                            .add(people)
-                            .addOnSuccessListener(this, documentReference -> {
-                                Toast.makeText(getApplicationContext(), "Chegou", Toast.LENGTH_LONG).show();
-                            });
+                            .add(people);
                     galleryAddPic();
                     finish();
                 }
@@ -162,7 +160,8 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                         ExifInterface ei = new ExifInterface(this.currentPhotoPath);
-                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
 
                         Bitmap rotatedBitmap = null;
                         switch (orientation) {
@@ -185,31 +184,28 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
                         this.imageView.setImageBitmap(rotatedBitmap);
                         this.pictureTakenPath = this.currentPhotoPath;
-                        Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
                     } catch (IOException exception) {
                         exception.printStackTrace();
                     }
-                } else {
-                    Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
                 }
             } else if (requestCode == GALERY_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    Cursor cursor = getContentResolver().query(selectedImage,
+                            filePathColumn,
+                            null,
+                            null,
+                            null);
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     this.pictureTakenPath = cursor.getString(columnIndex);
                     this.imageView.setImageURI(selectedImage);
-                    Toast.makeText(this, this.pictureTakenPath, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, "Last Path= " + this.pictureTakenPath, Toast.LENGTH_LONG).show();
                 }
             } else if (requestCode == MAP_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {
                     this.lat = data.getStringExtra("lastMarkerLat");
                     this.lng = data.getStringExtra("lastMarkerLng");
-                } else {
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -225,10 +221,9 @@ public class CreatePeopleActivity extends AppCompatActivity {
             }
             //Continue only if the File was sucessfully created
             if (this.photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(this,
+                return FileProvider.getUriForFile(this,
                         "com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.fileprovider",
                         this.photoFile);
-                return photoUri;
             }
             return null;
         }
@@ -258,13 +253,15 @@ public class CreatePeopleActivity extends AppCompatActivity {
 
         private void showSettingsDialog () {
             AlertDialog.Builder builder = new AlertDialog.Builder(CreatePeopleActivity.this);
-            builder.setTitle("Need Permissions");
-            builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-            builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
+            builder.setTitle(R.string.showSettingDialogTitle);
+            builder.setMessage(R.string.showSettingsDialogMessage);
+            builder.setPositiveButton(R.string.showSettingsDialogPositiveButton,
+                    (dialog, which) -> {
                 dialog.cancel();
                 openSettings();
             });
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.setNegativeButton(R.string.showSettingsDialogNegativeButton,
+                    (dialog, which) -> dialog.cancel());
             builder.show();
 
         }

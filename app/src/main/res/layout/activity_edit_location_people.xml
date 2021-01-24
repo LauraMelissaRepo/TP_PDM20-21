@@ -26,7 +26,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:padding="8dp"
-        android:text="Editar"
+        android:text="@string/stringEditButtonEditPeople"
         app:backgroundTint="#4F000000"
         android:textColor="@color/black"/>
 

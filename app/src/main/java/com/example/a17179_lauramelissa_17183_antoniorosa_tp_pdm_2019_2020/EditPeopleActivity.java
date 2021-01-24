@@ -17,14 +17,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -91,7 +89,8 @@ public class EditPeopleActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
+                                                                       PermissionToken token) {
 
                         }
                     }).check();
@@ -104,7 +103,8 @@ public class EditPeopleActivity extends AppCompatActivity {
                     .withListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse response) {
-                            Intent intentSelectPicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            Intent intentSelectPicture = new Intent(Intent.ACTION_PICK,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(intentSelectPicture, GALERY_REQUEST_CODE);
                         }
 
@@ -116,7 +116,8 @@ public class EditPeopleActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
+                                                                       PermissionToken token) {
                             token.continuePermissionRequest();
                         }
                     }).check();
@@ -153,7 +154,8 @@ public class EditPeopleActivity extends AppCompatActivity {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                     androidx.exifinterface.media.ExifInterface ei = new androidx.exifinterface.media.ExifInterface(this.currentPhotoPath);
-                    int orientation = ei.getAttributeInt(androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION, androidx.exifinterface.media.ExifInterface.ORIENTATION_UNDEFINED);
+                    int orientation = ei.getAttributeInt(androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+                            androidx.exifinterface.media.ExifInterface.ORIENTATION_UNDEFINED);
 
                     Bitmap rotatedBitmap = null;
                     switch (orientation) {
@@ -187,7 +189,11 @@ public class EditPeopleActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn,
+                        null,
+                        null,
+                        null);
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 this.imgPath = cursor.getString(columnIndex);
@@ -288,13 +294,15 @@ public class EditPeopleActivity extends AppCompatActivity {
 
     private void showSettingsDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(EditPeopleActivity.this);
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
-            dialog.cancel();
-            openSettings();
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setTitle(R.string.showSettingDialogTitle);
+        builder.setMessage(R.string.showSettingsDialogMessage);
+        builder.setPositiveButton(R.string.showSettingsDialogPositiveButton,
+                (dialog, which) -> {
+                    dialog.cancel();
+                    openSettings();
+                });
+        builder.setNegativeButton(R.string.showSettingsDialogNegativeButton,
+                (dialog, which) -> dialog.cancel());
         builder.show();
 
     }

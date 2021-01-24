@@ -7,35 +7,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
-import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.model.Document;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +79,6 @@ public class PeopleActivity extends AppCompatActivity {
                     if(error == null){
                         List<People> people = value.toObjects(People.class);
                         peopleAdapter.setData(people);
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Não há nada", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -117,7 +106,9 @@ public class PeopleActivity extends AppCompatActivity {
         @NonNull
         @Override
         public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.people_list, parent, false);
+            View view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.people_list, parent, false);
             return  new PeopleViewHolder(view);
         }
 
@@ -138,7 +129,6 @@ public class PeopleActivity extends AppCompatActivity {
         private final ImageView picturePerson;
         private final TextView namePerson;
         private final TextView degreePerson;
-        private People people;
         private int positionClicked;
 
         public PeopleViewHolder(@NonNull View itemView){
@@ -150,23 +140,21 @@ public class PeopleActivity extends AppCompatActivity {
 
             buttonMap.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                Log.d("ID BOTAO", "" + position);
                 String id = getIdDocument(position);
 
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
-                DocumentReference documentReference = fb.collection("peoples").document(id);
-                documentReference.get().addOnCompleteListener(task -> {
+                DocumentReference docRef = fb.collection("peoples").document(id);
+                docRef.get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot != null){
-                            Intent intent = new Intent(PeopleActivity.this,ShowLocationActivity.class);
-                            intent.putExtra("Lat", documentSnapshot.getString("lat"));
-                            intent.putExtra("Lng", documentSnapshot.getString("lng"));
-                            intent.putExtra("Name", documentSnapshot.getString("namePerson"));
-                            intent.putExtra("Degree", documentSnapshot.getString("degreePerson"));
+                        DocumentSnapshot docSnap = task.getResult();
+                        if (docSnap != null){
+                            Intent intent = new Intent(PeopleActivity.this,
+                                    ShowLocationActivity.class);
+                            intent.putExtra("Lat", docSnap.getString("lat"));
+                            intent.putExtra("Lng", docSnap.getString("lng"));
+                            intent.putExtra("Name", docSnap.getString("namePerson"));
+                            intent.putExtra("Degree", docSnap.getString("degreePerson"));
                             startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "erro a carregar localização", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -177,21 +165,20 @@ public class PeopleActivity extends AppCompatActivity {
                 String id = getIdDocument(position);
 
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
-                DocumentReference documentReference = fb.collection("peoples").document(id);
-                documentReference.get().addOnCompleteListener(task -> {
+                DocumentReference docRef = fb.collection("peoples").document(id);
+                docRef.get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot != null){
-                            Intent intent = new Intent(PeopleActivity.this,EditPeopleActivity.class);
+                        DocumentSnapshot docSnap = task.getResult();
+                        if (docSnap != null){
+                            Intent intent = new Intent(PeopleActivity.this,
+                                    EditPeopleActivity.class);
                             intent.putExtra("DocumentID", id);
-                            intent.putExtra("Lat", documentSnapshot.getString("lat"));
-                            intent.putExtra("Lng", documentSnapshot.getString("lng"));
-                            intent.putExtra("Name", documentSnapshot.getString("namePerson"));
-                            intent.putExtra("Degree", documentSnapshot.getString("degreePerson"));
-                            intent.putExtra("ImgPath", documentSnapshot.getString("imgPath"));
+                            intent.putExtra("Lat", docSnap.getString("lat"));
+                            intent.putExtra("Lng", docSnap.getString("lng"));
+                            intent.putExtra("Name", docSnap.getString("namePerson"));
+                            intent.putExtra("Degree", docSnap.getString("degreePerson"));
+                            intent.putExtra("ImgPath", docSnap.getString("imgPath"));
                             startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "erro a carregar localização", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -201,15 +188,17 @@ public class PeopleActivity extends AppCompatActivity {
                 this.positionClicked = getAdapterPosition();
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(PeopleActivity.this);
-                alertDialog.setTitle("Eliminar contacto");
-                alertDialog.setMessage("Caso deseje eliminar este contacto, pressione sim.");
-                alertDialog.setPositiveButton("Sim", (dialog, which) -> {
+                alertDialog.setTitle(R.string.deletePeopleTitleAlertDialog);
+                alertDialog.setMessage(R.string.deletePeopleMessageAlertDialog);
+                alertDialog
+                        .setPositiveButton(R.string.positiveButtonDeletePeopleAlertDialog,
+                                (dialog, which) -> {
                    deleteItem(this.positionClicked);
                    dialog.cancel();
                 });
-                alertDialog.setNegativeButton("Não", (dialog, which) -> {
-                    dialog.cancel();
-                });
+                alertDialog
+                        .setNegativeButton(R.string.negativeButtonDeletePeopleAlertDialog,
+                                (dialog, which) -> dialog.cancel());
                 alertDialog.show();
 
                 return false;
@@ -217,7 +206,6 @@ public class PeopleActivity extends AppCompatActivity {
         }
 
         public void bind(People people){
-            this.people = people;
             String imgPath = people.getImgPath();
 
             File img = new File(imgPath);
@@ -255,9 +243,6 @@ public class PeopleActivity extends AppCompatActivity {
 
                 this.picturePerson.setImageBitmap(rotatedBitmap);
             }
-            else{
-                Toast.makeText(getApplicationContext(), "erro a carregar a imagem", Toast.LENGTH_LONG).show();
-            }
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());
         }
@@ -268,10 +253,12 @@ public class PeopleActivity extends AppCompatActivity {
                 Intent resultIntent = null;
                 switch (item.getItemId()) {
                     case R.id.nav_tasks:
-                        resultIntent = new Intent(PeopleActivity.this, MainActivity.class);
+                        resultIntent = new Intent(PeopleActivity.this,
+                                MainActivity.class);
                         break;
                     case R.id.nav_map:
-                        resultIntent = new Intent(PeopleActivity.this, LocationActivity.class);
+                        resultIntent = new Intent(PeopleActivity.this,
+                                LocationActivity.class);
                         break;
                 }
                 if (resultIntent != null){

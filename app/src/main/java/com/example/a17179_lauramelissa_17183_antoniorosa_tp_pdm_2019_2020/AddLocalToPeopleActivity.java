@@ -57,9 +57,7 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         mapFragment.getMapAsync(this);
 
         Button moveCamera = findViewById(R.id.moveCamera);
-        moveCamera.setOnClickListener(v -> {
-            moveCameraCurrentLocation();
-        });
+        moveCamera.setOnClickListener(v -> moveCameraCurrentLocation());
     }
 
     /**
@@ -91,7 +89,8 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
                     }
 
                     @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
+                                                                   PermissionToken token) {
                         token.continuePermissionRequest();
                     }
                 }).check();
@@ -100,8 +99,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
             if (this.lastMarker != null) {
                 this.lastMarker.remove();
             }
-            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-            this.lastMarker = marker;
+            this.lastMarker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
             this.lat = "" + this.lastMarker.getPosition().latitude;
             this.lng = "" + this.lastMarker.getPosition().longitude;
         });
@@ -118,13 +118,14 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
 
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GO TO SETTINGS", (dialog, which) -> {
+        builder.setTitle(R.string.showSettingDialogTitle);
+        builder.setMessage(R.string.showSettingsDialogMessage);
+        builder.setPositiveButton(R.string.showSettingsDialogPositiveButton, (dialog, which) -> {
             dialog.cancel();
             openSettings();
         });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.showSettingsDialogNegativeButton,
+                (dialog, which) -> dialog.cancel());
         builder.show();
 
     }
@@ -137,18 +138,27 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         startActivityForResult(intent, 101);
     }
 
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getMinimumHeight(), Bitmap.Config.ARGB_8888);
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_my_location_24);
+        vectorDrawable.setBounds(0,
+                0,
+                vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getMinimumHeight(),
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     private void addCurrentLocationMarker() {
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.
+                getFusedLocationProviderClient(getApplicationContext());
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -160,9 +170,12 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
-            Location currentLocation = location;
-            this.currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(this.currentLatLng).title("Localização Atual").icon(bitmapDescriptorFromVector(getApplicationContext(), R.drawable.ic_baseline_my_location_24)));
+            this.currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions()
+                    .position(this.currentLatLng)
+                    .title(getString(R.string.markerTitleAtualLocation))
+                    .icon(bitmapDescriptorFromVector(getApplicationContext()
+                    )));
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
             mMap.animateCamera(cameraUpdate);
         });
