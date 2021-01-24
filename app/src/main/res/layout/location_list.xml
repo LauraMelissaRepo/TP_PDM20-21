@@ -24,16 +24,15 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:lines="1"
-            android:text="Localização"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonMap"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMapLocationList"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.4" />
 
         <Button
-            android:id="@+id/buttonMap"
+            android:id="@+id/buttonMapLocationList"
             android:layout_width="50dp"
             android:layout_height="60dp"
             android:adjustViewBounds="true"

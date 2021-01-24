@@ -1,30 +1,24 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.exifinterface.media.ExifInterface;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Location;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.IOException;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CreateLocationActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     public static final int MAP_REQUEST_CODE = 3000;
-    private String lat, lng;
+    private String lat, lng, locationDescriptionString;
     private EditText locationDescription;
     private TextView savedLocation;
 
@@ -32,6 +26,10 @@ public class CreateLocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_location);
+
+        this.lat = "";
+        this.lng = "";
+        this.locationDescriptionString = "";
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,7 +39,6 @@ public class CreateLocationActivity extends AppCompatActivity {
         this.savedLocation = findViewById(R.id.text_saved_location);
 
 
-
         ExtendedFloatingActionButton mapButton = findViewById(R.id.add_location_map);
         mapButton.setOnClickListener(v -> {
             Intent intentMap = new Intent(getApplicationContext(), AddLocalToPeopleActivity.class);
@@ -49,10 +46,33 @@ public class CreateLocationActivity extends AppCompatActivity {
         });
 
         ExtendedFloatingActionButton saveAll = findViewById(R.id.save_location_btn);
+        saveAll.setOnClickListener(v -> {
+            this.locationDescriptionString = locationDescription.getText().toString();
 
-//        saveAll.setOnClickListener(v -> {
-//            String description = locationDescription.getText().toString();
-//        }
+            if (this.lat.equals("")
+                    || this.lng.equals("")
+                    || this.locationDescriptionString.equals("")){
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateLocationActivity.this);
+
+                builder.setTitle(R.string.errorCreatePeopleTitleAlertDialog);
+                builder.setMessage(R.string.errorCreateLocationMessageAlertDialog);
+                builder.setPositiveButton(R.string.errorCreatePeoplePositiveButtonAlertDialog,
+                        (dialog, which) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }else{
+                Location location = new Location(this.locationDescriptionString,
+                        this.lat,
+                        this.lng);
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                db.collection("locations")
+                        .add(location);
+                finish();
+            }
+
+        });
     }
 
 

@@ -27,7 +27,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Criar tarefa");
+        getSupportActionBar().setTitle(R.string.createTaskToolBarTitle);
 
         this.taskDescription = findViewById(R.id.task_description);
 

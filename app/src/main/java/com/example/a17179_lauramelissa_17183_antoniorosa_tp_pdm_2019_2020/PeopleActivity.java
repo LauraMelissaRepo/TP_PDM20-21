@@ -136,8 +136,8 @@ public class PeopleActivity extends AppCompatActivity {
             this.picturePerson = itemView.findViewById(R.id.picturePerson);
             this.namePerson = itemView.findViewById(R.id.namePerson);
             this.degreePerson = itemView.findViewById(R.id.degreePerson);
-            Button buttonMap = itemView.findViewById(R.id.buttonMap);
 
+            Button buttonMap = itemView.findViewById(R.id.buttonMap);
             buttonMap.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 String id = getIdDocument(position);
@@ -152,8 +152,7 @@ public class PeopleActivity extends AppCompatActivity {
                                     ShowLocationActivity.class);
                             intent.putExtra("Lat", docSnap.getString("lat"));
                             intent.putExtra("Lng", docSnap.getString("lng"));
-                            intent.putExtra("Name", docSnap.getString("namePerson"));
-                            intent.putExtra("Degree", docSnap.getString("degreePerson"));
+                            intent.putExtra("Title", docSnap.getString("namePerson") + " - " + docSnap.getString("degreePerson"));
                             startActivity(intent);
                         }
                     }

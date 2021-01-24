@@ -108,11 +108,22 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
 
         Button saveButton = findViewById(R.id.saveLocation);
         saveButton.setOnClickListener(v -> {
-            Intent intent = getIntent();
-            intent.putExtra("lastMarkerLat", this.lat);
-            intent.putExtra("lastMarkerLng", this.lng);
-            setResult(RESULT_OK, intent);
-            finish();
+            if (this.lat == null && this.lng == null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
+
+                builder.setTitle(R.string.errorCreatePeopleTitleAlertDialog);
+                builder.setMessage(R.string.errorCreateLocationMessage);
+                builder.setPositiveButton(R.string.errorCreatePeoplePositiveButtonAlertDialog,
+                        (dialog, which) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }else{
+                Intent intent = getIntent();
+                intent.putExtra("lastMarkerLat", this.lat);
+                intent.putExtra("lastMarkerLng", this.lng);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         });
     }
 

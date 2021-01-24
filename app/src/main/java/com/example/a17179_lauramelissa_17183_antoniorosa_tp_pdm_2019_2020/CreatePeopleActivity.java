@@ -18,9 +18,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,11 +48,16 @@ public class CreatePeopleActivity extends AppCompatActivity {
     private String lat, lng;
     private String currentPhotoPath, pictureTakenPath;
     private File photoFile;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_people);
+
+        this.toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.createPeopleToolBarTitle);
 
         this.namePersonCreate = findViewById(R.id.namePersonTextInputEdit);
         this.degreePersonCreate = findViewById(R.id.degreePersonTextInputEdit);
@@ -206,6 +213,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     this.lat = data.getStringExtra("lastMarkerLat");
                     this.lng = data.getStringExtra("lastMarkerLng");
+                    Log.d("LATLNG", "LAT: " + this.lat + " - LNG" + this.lng);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);

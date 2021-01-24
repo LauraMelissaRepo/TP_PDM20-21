@@ -25,11 +25,17 @@
     <string name="markerTitleAtualLocation">Localização Atual</string>
     <string name="stringNameCreatePeople">Nome</string>
     <string name="stringDegreeCreatePeople">Grau Parentesco</string>
-    <string name="stringCreateButtonCreatePeople">Criar</string>
+    <string name="stringCreateButton">Adicionar</string>
     <string name="stringTakePictureCreatePeople">Tirar Imagem</string>
     <string name="stringTakeGalleryCreatePeople">Escolher Imagem</string>
     <string name="stringLocationCreatePeople">Localização</string>
     <string name="stringSaveLocationCreateLocation">Guardar</string>
     <string name="stringEditButtonEditPeople">Editar</string>
     <string name="createLocation">Criar local</string>
+    <string name="errorCreateLocationMessage">Para guardar a localização, é necessário clicar no mapa.</string>
+    <string name="createTaskToolBarTitle">Criar tarefa</string>
+    <string name="createPeopleToolBarTitle">Criar Pessoa</string>
+    <string name="errorCreateLocationMessageAlertDialog">Para criar esta localização, tem que preencher toda a informação</string>
+    <string name="deleteLocationTitleAlertDialog">Eliminar localização</string>
+    <string name="deleteLocationMessageAlertDialog">Caso deseje eliminar esta localização, pressione sim</string>
 </resources>
