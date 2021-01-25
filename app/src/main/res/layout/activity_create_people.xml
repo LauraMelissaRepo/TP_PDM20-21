@@ -19,16 +19,19 @@
         android:id="@+id/namePersonTextLayoutEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_margin="5dp">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/namePersonTextInputEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/stringNameCreatePeople" />
+            android:hint="@string/stringNameCreatePeople"
+            android:shadowColor="@color/white"
+            android:textColor="@color/black"
+            android:textColorHint="@color/white" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,14 +52,14 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+   <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/editPeopleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/stringCreateButton"
-        android:textColor="@color/black"
         android:textColorHighlight="@android:color/darker_gray"
         android:textColorLink="@android:color/darker_gray"
         app:backgroundTint="?attr/colorButtonNormal"
@@ -66,55 +69,72 @@
 
     <ImageView
         android:id="@+id/imageViewEdit"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="306dp"
+        android:layout_height="299dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@+id/locationEdit"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/takePictureEdit"
-        tools:srcCompat="@tools:sample/avatars"
-        android:layout_margin="10dp"/>
+        app:layout_constraintVertical_bias="0.2"
+        tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/takePictureEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="@string/stringTakePictureCreatePeople"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit"
-        android:textColor="@color/black"
-        android:textColorHighlight="@android:color/darker_gray"
-        android:textColorLink="@android:color/darker_gray"
-        app:backgroundTint="?attr/colorButtonNormal"/>
-
-    <Button
-        android:id="@+id/selectPictureEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:text="@string/stringTakeGalleryCreatePeople"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit"
-        android:textColor="@color/black"
-        android:textColorHighlight="@android:color/darker_gray"
-        android:textColorLink="@android:color/darker_gray"
-        app:backgroundTint="?attr/colorButtonNormal"/>
-
-    <Button
-        android:id="@+id/locationEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/stringLocationCreatePeople"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:textColor="@color/black"
         android:textColorHighlight="@android:color/darker_gray"
         android:textColorLink="@android:color/darker_gray"
         app:backgroundTint="?attr/colorButtonNormal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:icon="@android:drawable/ic_menu_camera"
+        app:layout_constraintEnd_toStartOf="@+id/selectPictureEdit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/selectPictureEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"
+        app:icon="@android:drawable/ic_menu_gallery"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/takePictureEdit"
+        app:layout_constraintTop_toBottomOf="@+id/degreePersonTextLayoutEdit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/locationEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@color/black"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColorLink="@android:color/darker_gray"
+        app:backgroundTint="?attr/colorButtonNormal"
+        app:icon="@drawable/ic_baseline_location_on_24"
+        app:layout_constraintBottom_toTopOf="@+id/editPeopleButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -66,7 +67,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
         this.lat = "";
         this.lng = "";
 
-        Button takePictureButton = findViewById(R.id.takePictureEdit);
+        ExtendedFloatingActionButton takePictureButton = findViewById(R.id.takePictureEdit);
         takePictureButton.setOnClickListener(v -> Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
                 .withListener(new PermissionListener() {
@@ -92,7 +93,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     }
                 }).check());
 
-        Button selectPictureButton = findViewById(R.id.selectPictureEdit);
+        ExtendedFloatingActionButton selectPictureButton = findViewById(R.id.selectPictureEdit);
         selectPictureButton.setOnClickListener(v -> Dexter.withActivity(this)
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new PermissionListener() {
@@ -117,13 +118,13 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     }
                 }).check());
 
-        Button mapButton = findViewById(R.id.locationEdit);
+        ExtendedFloatingActionButton mapButton = findViewById(R.id.locationEdit);
         mapButton.setOnClickListener(v -> {
             Intent intentMap = new Intent(getApplicationContext(), AddLocalToPeopleActivity.class);
             startActivityForResult(intentMap, MAP_REQUEST_CODE);
         });
 
-        Button addButton = findViewById(R.id.editPeopleButton);
+        ExtendedFloatingActionButton addButton = findViewById(R.id.editPeopleButton);
         addButton.setOnClickListener(v -> {
             String namePerson = this.namePersonCreate.getText().toString();
             String degreePerson = this.degreePersonCreate.getText().toString();
