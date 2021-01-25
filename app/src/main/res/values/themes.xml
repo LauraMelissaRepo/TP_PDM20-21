@@ -12,13 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

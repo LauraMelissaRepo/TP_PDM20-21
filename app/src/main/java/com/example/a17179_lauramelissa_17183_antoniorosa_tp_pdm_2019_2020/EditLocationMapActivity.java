@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class EditLocationPeople extends FragmentActivity implements OnMapReadyCallback {
+public class EditLocationMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private String lat, lng;
@@ -59,7 +59,7 @@ public class EditLocationPeople extends FragmentActivity implements OnMapReadyCa
 
         mMap.setOnMapClickListener(latLng -> {
             mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Localização"));
+            mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Localização"));
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17f);
             mMap.animateCamera(cameraUpdate);
             this.lat = String.valueOf(latLng.latitude);

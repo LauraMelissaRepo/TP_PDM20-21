@@ -101,6 +101,7 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
             }
             this.lastMarker = mMap.addMarker(new MarkerOptions()
                     .position(latLng)
+                    .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
             this.lat = "" + this.lastMarker.getPosition().latitude;
             this.lng = "" + this.lastMarker.getPosition().longitude;

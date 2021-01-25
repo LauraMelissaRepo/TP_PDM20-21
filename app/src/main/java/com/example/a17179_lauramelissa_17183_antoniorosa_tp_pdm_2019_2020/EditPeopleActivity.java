@@ -131,7 +131,7 @@ public class EditPeopleActivity extends AppCompatActivity {
 
         Button locationEdit = findViewById(R.id.locationEdit);
         locationEdit.setOnClickListener(v -> {
-            Intent intentMap = new Intent(getApplicationContext(), EditLocationPeople.class);
+            Intent intentMap = new Intent(getApplicationContext(), EditLocationMapActivity.class);
             intentMap.putExtra("Lat", this.lat);
             intentMap.putExtra("Lng", this.lng);
             startActivityForResult(intentMap, MAP_REQUEST_CODE);

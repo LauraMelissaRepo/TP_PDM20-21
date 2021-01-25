@@ -26,16 +26,16 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
-        android:hardwareAccelerated="false"
         android:theme="@style/Theme.17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020">
-
-        <activity android:name=".CreateLocationActivity"></activity>
+        <activity android:name=".EditLocationActivity"></activity>
+        <activity android:name=".CreateLocationActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,7 +49,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".EditLocationPeople"
+            android:name=".EditLocationMapActivity"
             android:label="@string/title_activity_edit_location_people" />
         <activity android:name=".EditPeopleActivity" />
         <activity

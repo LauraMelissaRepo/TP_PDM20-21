@@ -20,7 +20,6 @@ public class EditTaskActivity extends AppCompatActivity {
     public static final String TASK_KEY = "task";
     private EditText taskDescriptionEditText;
     private ExtendedFloatingActionButton saveButton;
-    public static final String DATA_EXTRA_KEY = "response_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +29,7 @@ public class EditTaskActivity extends AppCompatActivity {
         this.task = task;
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Editar tarefa");
+        getSupportActionBar().setTitle(R.string.editTaskToolbar);
 
         this.taskDescriptionEditText = findViewById(R.id.new_description_task);
         this.saveButton = findViewById(R.id.save_task_btn);

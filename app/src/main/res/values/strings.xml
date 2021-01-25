@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AlzheimeReminder</string>
+    <string name="app_name" translatable="false">AlzheimeReminder</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="tasks">Tarefas</string>
     <string name="people">Pessoas</string>
@@ -7,7 +7,6 @@
     <string name="taskDeleteMessage">Prima sim para eliminá-la</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
-    <string name="questionToDelete">Deseja eliminar esta tarefa?</string>
     <string name="title_activity_add_local_to_contact">Map</string>
     <string name="title_activity_show_location">Map</string>
     <string name="title_activity_edit_location_people">Map</string>
@@ -20,24 +19,29 @@
     <string name="showSettingsDialogPositiveButton">Ir às definições</string>
     <string name="showSettingsDialogNegativeButton">Cancelar</string>
     <string name="errorCreatePeopleTitleAlertDialog">Erro</string>
-    <string name="errorCreatePeopleMessageAlertDialog">Para criar contacto, tem que preencher toda a informação.</string>
+    <string name="errorCreatePeopleMessageAlertDialog">Para criar um contacto, tem que preencher toda a informação.</string>
     <string name="errorCreatePeoplePositiveButtonAlertDialog">Ok</string>
     <string name="markerTitleAtualLocation">Localização Atual</string>
     <string name="stringNameCreatePeople">Nome</string>
     <string name="stringDegreeCreatePeople">Grau Parentesco</string>
     <string name="stringCreateButton">Adicionar</string>
-    <string name="stringTakePictureCreatePeople">Tirar Imagem</string>
-    <string name="stringTakeGalleryCreatePeople">Escolher Imagem</string>
+    <string name="stringTakePictureCreatePeople">Tirar foto</string>
+    <string name="stringTakeGalleryCreatePeople">Escolher foto</string>
     <string name="stringLocationCreatePeople">Localização</string>
     <string name="stringSaveLocationCreateLocation">Guardar</string>
     <string name="stringEditButtonEditPeople">Editar</string>
     <string name="createLocation">Criar local</string>
     <string name="errorCreateLocationMessage">Para guardar a localização, é necessário clicar no mapa.</string>
     <string name="createTaskToolBarTitle">Criar tarefa</string>
-    <string name="createPeopleToolBarTitle">Criar Pessoa</string>
+    <string name="createPeopleToolBarTitle">Criar pessoa</string>
     <string name="errorCreateLocationMessageAlertDialog">Para criar esta localização, tem que preencher toda a informação</string>
     <string name="deleteLocationTitleAlertDialog">Deseja eliminar esta localização?</string>
     <string name="deleteLocationMessageAlertDialog">Prima sim para eliminá-la</string>
-    <string name="editPeopleToolbarTitle">Editar Pessoa</string>
+    <string name="editPeopleToolbarTitle">Editar pessoa</string>
     <string name="saveEditPeople">Guardar</string>
+    <string name="questionToDelete">Deseja eliminar esta tarefa?</string>
+    <string name="taskDescriptionEditText">Escreva aqui a sua tarefa</string>
+    <string name="openMap">Abrir mapa</string>
+    <string name="editLocationToolbar">Editar localização</string>
+    <string name="editTaskToolbar">Editar tarefa</string>
 </resources>

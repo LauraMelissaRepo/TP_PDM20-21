@@ -3,10 +3,12 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.Location;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
+import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.database.TaskDatabase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
@@ -176,6 +179,28 @@ public class LocationActivity extends AppCompatActivity {
                 alertDialog.show();
 
                 return false;
+            });
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                String id = getIdDocument(position);
+
+                FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                DocumentReference docRef = fb.collection("locations").document(id);
+                docRef.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot docSnap = task.getResult();
+                        if (docSnap != null){
+                            Intent intent = new Intent(LocationActivity.this,
+                                EditLocationActivity.class);
+                            intent.putExtra("DocumentID", id);
+                            intent.putExtra("LocationName", docSnap.getString("locationDescription"));
+                            intent.putExtra("Lat", docSnap.getString("lat"));
+                            intent.putExtra("Lng", docSnap.getString("lng"));
+                            startActivity(intent);
+                        }
+                    }
+                });
             });
         }
 
