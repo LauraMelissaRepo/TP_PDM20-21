@@ -138,7 +138,6 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         builder.setNegativeButton(R.string.showSettingsDialogNegativeButton,
                 (dialog, which) -> dialog.cancel());
         builder.show();
-
     }
 
     // navigating user to app settings

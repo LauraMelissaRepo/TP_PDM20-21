@@ -11,8 +11,8 @@
     <string name="title_activity_add_local_to_contact">Map</string>
     <string name="title_activity_show_location">Map</string>
     <string name="title_activity_edit_location_people">Map</string>
-    <string name="deletePeopleTitleAlertDialog">Eliminar contacto</string>
-    <string name="deletePeopleMessageAlertDialog">Caso deseje eliminar este contacto, pressione sim.</string>
+    <string name="deletePeopleTitleAlertDialog">Deseja eliminar esta pessoa?</string>
+    <string name="deletePeopleMessageAlertDialog">Prima sim para eliminá-la</string>
     <string name="positiveButtonDeletePeopleAlertDialog">Sim</string>
     <string name="negativeButtonDeletePeopleAlertDialog">Não</string>
     <string name="showSettingDialogTitle">Precisa permissões</string>
@@ -36,6 +36,8 @@
     <string name="createTaskToolBarTitle">Criar tarefa</string>
     <string name="createPeopleToolBarTitle">Criar Pessoa</string>
     <string name="errorCreateLocationMessageAlertDialog">Para criar esta localização, tem que preencher toda a informação</string>
-    <string name="deleteLocationTitleAlertDialog">Eliminar localização</string>
-    <string name="deleteLocationMessageAlertDialog">Caso deseje eliminar esta localização, pressione sim</string>
+    <string name="deleteLocationTitleAlertDialog">Deseja eliminar esta localização?</string>
+    <string name="deleteLocationMessageAlertDialog">Prima sim para eliminá-la</string>
+    <string name="editPeopleToolbarTitle">Editar Pessoa</string>
+    <string name="saveEditPeople">Guardar</string>
 </resources>

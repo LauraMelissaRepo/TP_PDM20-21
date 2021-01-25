@@ -3,6 +3,7 @@ package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -45,11 +46,16 @@ public class EditPeopleActivity extends AppCompatActivity {
     private File photoFile;
     private String currentPhotoPath;
     private ImageView imageView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_people);
+
+        this.toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.editPeopleToolbarTitle);
 
         Bundle extras = getIntent().getExtras();
         this.documentID = extras.getString("DocumentID");

@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
@@ -89,7 +88,6 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     @Override
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permission,
                                                                    PermissionToken token) {
-
                     }
                 }).check());
 
