@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">17179_LauraMelissa_17183_AntonioRosa_TP_PDM_2019_2020</string>
+    <string name="app_name">AlzheimeReminder</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="tasks">Tarefas</string>
     <string name="people">Pessoas</string>
