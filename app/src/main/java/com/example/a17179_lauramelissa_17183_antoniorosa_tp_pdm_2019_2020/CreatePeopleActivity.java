@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -187,8 +188,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                             default:
                                 rotatedBitmap = bitmap;
                         }
-
-                        this.imageView.setImageBitmap(rotatedBitmap);
+                        Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.imageView);
                         this.pictureTakenPath = this.currentPhotoPath;
                     } catch (IOException exception) {
                         exception.printStackTrace();
@@ -206,7 +206,8 @@ public class CreatePeopleActivity extends AppCompatActivity {
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     this.pictureTakenPath = cursor.getString(columnIndex);
-                    this.imageView.setImageURI(selectedImage);
+                    Glide.with(getApplicationContext()).load(selectedImage).into(this.imageView);
+//                    this.imageView.setImageURI(selectedImage);
                 }
             } else if (requestCode == this.MAP_REQUEST_CODE) {
                 if (resultCode == RESULT_OK) {

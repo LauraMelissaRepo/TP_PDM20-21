@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -238,9 +239,7 @@ public class PeopleActivity extends AppCompatActivity {
                     default:
                         rotatedBitmap = bitmap;
                 }
-
-
-                this.picturePerson.setImageBitmap(rotatedBitmap);
+                Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.picturePerson);
             }
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());

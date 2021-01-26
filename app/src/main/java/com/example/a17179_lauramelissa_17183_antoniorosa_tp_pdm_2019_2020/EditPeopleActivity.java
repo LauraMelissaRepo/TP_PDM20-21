@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
@@ -72,7 +73,7 @@ public class EditPeopleActivity extends AppCompatActivity {
         degreePersonEdit.setText(this.degree);
 
         this.imageView = findViewById(R.id.imageViewEdit);
-        this.imageView.setImageBitmap(getImage(this.imgPath));
+        Glide.with(getApplicationContext()).load(getImage(this.imgPath)).into(this.imageView);
 
         Button takePictureEdit = findViewById(R.id.takePictureEdit);
         takePictureEdit.setOnClickListener(v -> {
@@ -181,8 +182,7 @@ public class EditPeopleActivity extends AppCompatActivity {
                         default:
                             rotatedBitmap = bitmap;
                     }
-
-                    this.imageView.setImageBitmap(rotatedBitmap);
+                    Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.imageView);
                     this.imgPath = this.currentPhotoPath;
                     Toast.makeText(this, this.imgPath, Toast.LENGTH_LONG).show();
                 } catch (IOException exception) {
@@ -203,7 +203,7 @@ public class EditPeopleActivity extends AppCompatActivity {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 this.imgPath = cursor.getString(columnIndex);
-                this.imageView.setImageURI(selectedImage);
+                Glide.with(getApplicationContext()).load(selectedImage).into(this.imageView);
                 Toast.makeText(this, this.imgPath, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Last Path= " + this.imgPath, Toast.LENGTH_LONG).show();
