@@ -189,7 +189,8 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
     }
 
     /**
-     * Function responsible
+     * Function responsible for getting the current location of device and use is position
+     * to show a marker in map and move the camera to its position.
      */
     private void addCurrentLocationMarker() {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.
@@ -220,6 +221,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         });
     }
 
+    /**
+     * Function responsible to move the camera to the current location after the click of a button.
+     */
     private void moveCameraCurrentLocation() {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
         mMap.animateCamera(cameraUpdate);
