@@ -15,40 +15,45 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 
 public class EditTaskActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private Task task;
     public static final String TASK_KEY = "task";
     private EditText taskDescriptionEditText;
-    private ExtendedFloatingActionButton saveButton;
 
+    /***
+     * In this method you access the fields in the xml, create the add save button listener and finally,
+     * update the description in the database
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_task);
 
-        this.task = task;
-        this.toolbar = findViewById(R.id.toolbar);
+        //Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.editTaskToolbar);
 
         this.taskDescriptionEditText = findViewById(R.id.new_description_task);
-        this.saveButton = findViewById(R.id.save_task_btn);
 
+        //receive the id task
         long taskId = getIntent().getLongExtra("taskId", -1);
-
         if(taskId == -1) {
             finish();
         }
 
+        //receive the task description than we want to edit
         String t = getIntent().getStringExtra(TASK_KEY);
         this.taskDescriptionEditText.setText(t);
 
+        //get the task that as the id that we passed
         Task oldTask = TaskDatabase.getInstance(getApplicationContext()).taskDao().get(taskId);
 
+        //listener to update the description on the database
+        ExtendedFloatingActionButton saveButton = findViewById(R.id.save_task_btn);
         saveButton.setOnClickListener(v -> {
-            String description = taskDescriptionEditText.getText().toString();
+            String newDescription = taskDescriptionEditText.getText().toString();
 
-            oldTask.updateDescription(description);
+            oldTask.updateDescription(newDescription);
             TaskDatabase.getInstance(getApplicationContext()).taskDao().update(oldTask);
 
             finish();

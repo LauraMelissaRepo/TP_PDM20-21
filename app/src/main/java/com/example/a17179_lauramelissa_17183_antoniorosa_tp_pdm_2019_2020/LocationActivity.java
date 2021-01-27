@@ -38,7 +38,6 @@ import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private LocationAdapter locationAdapter;
     private List<String> ids;
 
@@ -47,37 +46,47 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        //BottomNav
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
         bottomNav.setSelectedItemId(R.id.nav_map);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        this.toolbar = findViewById(R.id.toolbar);
+        //Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.locations);
 
 
         RecyclerView locationsList = findViewById(R.id.recyclerViewLocation);
-        FloatingActionButton createLocationButton = findViewById(R.id.create_location_btn);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         this.locationAdapter = new LocationAdapter();
 
         locationsList.setLayoutManager(layoutManager);
         locationsList.setAdapter(this.locationAdapter);
 
+        //listener to go to the activity that creates a new location
+        FloatingActionButton createLocationButton = findViewById(R.id.create_location_btn);
         createLocationButton.setOnClickListener(v -> {
             Intent intent = new Intent(LocationActivity.this, CreateLocationActivity.class);
             startActivity(intent);
         });
     }
 
+    /**
+     * Function called on the start of the activity.
+     */
     @Override
     protected void onStart(){
         super.onStart();
         refreshData();
     }
 
+    /**
+     * Function used to refresh data from database into list's used on activity.
+     */
     private void refreshData() {
+        // After declare instance of Firebase we access into locations collection
+        // and save every document information into a list of people objects.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations")
                 .addSnapshotListener(this, (value, error) -> {
@@ -87,6 +96,8 @@ public class LocationActivity extends AppCompatActivity {
                     }
                 });
 
+        // Access again into firebase to get every document id and save it into
+        // a list so after we can access to a specific document and take an action on it.
         this.ids = new ArrayList<>();
         db.collection("locations")
                 .get()
@@ -103,11 +114,20 @@ public class LocationActivity extends AppCompatActivity {
 
         private List<Location> data = new ArrayList<>();
 
+        /**
+         * Initialize the dataset of the Adapter.
+         *
+         * @param data List<Location> containing the data to populate views to be used
+         *             by recyclerView.
+         */
         public void setData(List<Location> data){
             this.data = data;
             notifyDataSetChanged();
         }
 
+        /**
+         * Function used to create new views
+         */
         @NonNull
         @Override
         public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
@@ -117,12 +137,14 @@ public class LocationActivity extends AppCompatActivity {
             return  new LocationViewHolder(view);
         }
 
+        // Replace the contents of a view
         @Override
         public void onBindViewHolder(@NonNull LocationViewHolder holder, int position){
             Location location = this.data.get(position);
             holder.bind(location);
         }
 
+        // Return the size of data
         @Override
         public int getItemCount(){
             return this.data.size();
@@ -139,11 +161,16 @@ public class LocationActivity extends AppCompatActivity {
             super(itemView);
             this.locationDescription = itemView.findViewById(R.id.location_name);
 
+            // Declaring buttonMap and click listener
             Button buttonMap = itemView.findViewById(R.id.buttonMapLocationList);
             buttonMap.setOnClickListener(v -> {
+                // Get the position of the itemView where the button was clicked
                 int position = getAdapterPosition();
+                // Get the id of the document associated with this itemView
                 String id = getIdDocument(position);
 
+                // Declaring firebase, access to the document and pass the information to the
+                // new activity with the intents
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
                 DocumentReference docRef = fb.collection("locations").document(id);
                 docRef.get().addOnCompleteListener(task -> {
@@ -161,9 +188,12 @@ public class LocationActivity extends AppCompatActivity {
                 });
             });
 
+            // Listener to itemView click
             itemView.setOnLongClickListener(v -> {
+                // Get the position of the itemView clicked
                 this.positionClicked = getAdapterPosition();
 
+                // Declare an instance of an alert dialog and customizing it
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(LocationActivity.this);
                 alertDialog.setTitle(R.string.deleteLocationTitleAlertDialog);
                 alertDialog.setMessage(R.string.deleteLocationMessageAlertDialog);
@@ -181,10 +211,15 @@ public class LocationActivity extends AppCompatActivity {
                 return false;
             });
 
+            // Listener to itemView click
             itemView.setOnClickListener(v -> {
+                // Get the position of the itemView clicked
                 int position = getAdapterPosition();
+                // Get the id of the document associated with this itemView
                 String id = getIdDocument(position);
 
+                // Declaring firebase, access to the document and pass the information to the
+                // new activity with the intents
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
                 DocumentReference docRef = fb.collection("locations").document(id);
                 docRef.get().addOnCompleteListener(task -> {
@@ -209,6 +244,12 @@ public class LocationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Function called after listener from alertDialog positive button click.
+     * This function is responsible to delete the item from the recyclerView because it deletes
+     * the document based on the position from the firebase and the id from the list of ids.
+     * @param position of itemView clicked.
+     */
     private void deleteItem(int position){
         String id = this.ids.get(position);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -218,10 +259,19 @@ public class LocationActivity extends AppCompatActivity {
         this.ids.remove(position);
     }
 
+    /**
+     * Function called to return the id of the document based on the position of itemView clicked.
+     * @param position of itemView clicked.
+     * @return the id of the document.
+     */
     private String getIdDocument(int position){
         return this.ids.get(position);
     }
 
+    /**
+     * Function responsible to get the item click from the Bottom Navigation Bar, use
+     * a listener to create a new intent and move the user to a new Activity.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 Intent resultIntent = null;

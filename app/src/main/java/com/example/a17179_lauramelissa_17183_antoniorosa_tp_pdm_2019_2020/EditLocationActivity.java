@@ -17,8 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditLocationActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    private String documentID, locationDescription, lat, lng;
+    private String documentID;
+    private String lat;
+    private String lng;
     public static final int MAP_REQUEST_CODE = 3000;
 
     @Override
@@ -26,22 +27,21 @@ public class EditLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_location);
 
-
-        this.toolbar = findViewById(R.id.toolbar);
+        //Toobar
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.editLocationToolbar);
 
         Bundle extras = getIntent().getExtras();
         this.documentID = extras.getString("DocumentID");
-        this.locationDescription = extras.getString("LocationName");
+        String locationDescription = extras.getString("LocationName");
         this.lat = extras.getString("Lat");
         this.lng = extras.getString("Lng");
 
         EditText locationEditDescription = findViewById(R.id.location_edit_description);
-        locationEditDescription.setText(this.locationDescription);
+        locationEditDescription.setText(locationDescription);
 
         Button locationEditMap = findViewById(R.id.edit_location_map);
-
         locationEditMap.setOnClickListener(v -> {
             Intent intentMap = new Intent(getApplicationContext(), EditLocationMapActivity.class);
             intentMap.putExtra("Lat", this.lat);

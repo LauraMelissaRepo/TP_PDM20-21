@@ -50,7 +50,6 @@ public class CreatePeopleActivity extends AppCompatActivity {
     private String lat, lng;
     private String currentPhotoPath, pictureTakenPath;
     private File photoFile;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_people);
 
         // ToolBar
-        this.toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.createPeopleToolBarTitle);
 

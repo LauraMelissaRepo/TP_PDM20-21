@@ -16,7 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CreateLocationActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     public static final int MAP_REQUEST_CODE = 3000;
     private String lat, lng, locationDescriptionString;
     private EditText locationDescription;
@@ -31,7 +30,7 @@ public class CreateLocationActivity extends AppCompatActivity {
         this.lng = "";
         this.locationDescriptionString = "";
 
-        this.toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.createLocation);
 
