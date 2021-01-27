@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+
+import androidx.exifinterface.media.ExifInterface;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,45 +46,58 @@ public class PeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
 
+        //BottomNav
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_menu);
         bottomNav.setSelectedItemId(R.id.nav_people);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
+        //Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.people);
 
+        //RecyclerView
         RecyclerView peopleList = findViewById(R.id.recyclerViewPeople);
-        FloatingActionButton addButton = findViewById(R.id.addPeopleButton);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         this.peopleAdapter = new PeopleAdapter();
-
         peopleList.setLayoutManager(layoutManager);
         peopleList.setAdapter(peopleAdapter);
 
+        //Button to create new People and his listener
+        FloatingActionButton addButton = findViewById(R.id.addPeopleButton);
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, CreatePeopleActivity.class);
             startActivity(intent);
         });
 
     }
+
+    /**
+     * Function called on the start of the activity.
+     */
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         refreshData();
     }
 
+    /**
+     * Function used to refresh data from firebase into list's used on activity.
+     */
     private void refreshData() {
+        // After declare instance of Firebase we access into peoples collection
+        // and save every document information into a list of people objects.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("peoples")
                 .addSnapshotListener(this, (value, error) -> {
-                    if(error == null){
+                    if (error == null) {
                         List<People> people = value.toObjects(People.class);
                         peopleAdapter.setData(people);
                     }
                 });
 
+        // Access again into firebase to get every document id and save it into
+        // a list so after we can access to a specific document and take an action on it.
         this.ids = new ArrayList<>();
         db.collection("peoples")
                 .get()
@@ -95,60 +110,79 @@ public class PeopleActivity extends AppCompatActivity {
                 });
     }
 
-    public class PeopleAdapter extends RecyclerView.Adapter<PeopleViewHolder>{
+    public class PeopleAdapter extends RecyclerView.Adapter<PeopleViewHolder> {
 
         private List<People> data = new ArrayList<>();
 
-        public void setData(List<People> data){
+
+        /**
+         * Initialize the dataset of the Adapter.
+         *
+         * @param data List<People> containing the data to populate views to be used
+         *             by recyclerView.
+         */
+        public void setData(List<People> data) {
             this.data = data;
             notifyDataSetChanged();
         }
 
+        // Create new views (invoked by the layout manager)
+
+        /**
+         * Function used to create new views
+         */
         @NonNull
         @Override
-        public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.people_list, parent, false);
-            return  new PeopleViewHolder(view);
+            return new PeopleViewHolder(view);
         }
 
+        // Replace the contents of a view
         @Override
-        public void onBindViewHolder(@NonNull PeopleViewHolder holder, int position){
+        public void onBindViewHolder(@NonNull PeopleViewHolder holder, int position) {
             People people = this.data.get(position);
             holder.bind(people);
         }
 
+        // Return the size of data
         @Override
-        public int getItemCount(){
+        public int getItemCount() {
             return this.data.size();
         }
     }
 
-    public class PeopleViewHolder extends RecyclerView.ViewHolder{
+    public class PeopleViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView picturePerson;
         private final TextView namePerson;
         private final TextView degreePerson;
         private int positionClicked;
 
-        public PeopleViewHolder(@NonNull View itemView){
+        public PeopleViewHolder(@NonNull View itemView) {
             super(itemView);
             this.picturePerson = itemView.findViewById(R.id.picturePerson);
             this.namePerson = itemView.findViewById(R.id.namePerson);
             this.degreePerson = itemView.findViewById(R.id.degreePerson);
 
+            // Declaring buttonMap and click listener
             Button buttonMap = itemView.findViewById(R.id.buttonMap);
             buttonMap.setOnClickListener(v -> {
+                // Get the position of the itemView where the button was clicked
                 int position = getAdapterPosition();
+                // Get the id of the document associated with this itemView
                 String id = getIdDocument(position);
 
+                // Declaring firebase, access to the document and pass the information to the
+                // new activity with the intents
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
                 DocumentReference docRef = fb.collection("peoples").document(id);
                 docRef.get().addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot docSnap = task.getResult();
-                        if (docSnap != null){
+                        if (docSnap != null) {
                             Intent intent = new Intent(PeopleActivity.this,
                                     ShowLocationActivity.class);
                             intent.putExtra("Lat", docSnap.getString("lat"));
@@ -160,16 +194,21 @@ public class PeopleActivity extends AppCompatActivity {
                 });
             });
 
+            // Listener to itemView click
             itemView.setOnClickListener(v -> {
+                // Get the position of the itemView clicked
                 int position = getAdapterPosition();
+                // Get the id of the document associated with this itemView
                 String id = getIdDocument(position);
 
+                // Declaring firebase, access to the document and pass the information to the
+                // new activity with the intents
                 FirebaseFirestore fb = FirebaseFirestore.getInstance();
                 DocumentReference docRef = fb.collection("peoples").document(id);
                 docRef.get().addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot docSnap = task.getResult();
-                        if (docSnap != null){
+                        if (docSnap != null) {
                             Intent intent = new Intent(PeopleActivity.this,
                                     EditPeopleActivity.class);
                             intent.putExtra("DocumentID", id);
@@ -184,18 +223,23 @@ public class PeopleActivity extends AppCompatActivity {
                 });
             });
 
+            // Listener to itemView long click
             itemView.setOnLongClickListener(v -> {
+                // Get the position of the itemView clicked
                 this.positionClicked = getAdapterPosition();
 
+                // Declare an instance of an alert dialog and customizing it
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(PeopleActivity.this);
                 alertDialog.setTitle(R.string.deletePeopleTitleAlertDialog);
                 alertDialog.setMessage(R.string.deletePeopleMessageAlertDialog);
                 alertDialog
                         .setPositiveButton(R.string.positiveButtonDeletePeopleAlertDialog,
                                 (dialog, which) -> {
-                   deleteItem(this.positionClicked);
-                   dialog.cancel();
-                });
+                                    // if the positive button is clicked we call the function
+                                    // deleteItem() and pass the position of the itemView clicked
+                                    deleteItem(this.positionClicked);
+                                    dialog.cancel();
+                                });
                 alertDialog
                         .setNegativeButton(R.string.negativeButtonDeletePeopleAlertDialog,
                                 (dialog, which) -> dialog.cancel());
@@ -205,11 +249,19 @@ public class PeopleActivity extends AppCompatActivity {
             });
         }
 
-        public void bind(People people){
+        public void bind(People people) {
+            // Get the img path from the object people
             String imgPath = people.getImgPath();
 
+            // Creation of a new file with the path from the img
             File img = new File(imgPath);
-            if (img.exists()){
+
+            // Block of code responsible for verifying if the img exists,
+            // decode the file into bitmap, get the Exif of the image and the orientation.
+            // After getting the orientation, we use the Exif to rotate the image and save it
+            // into a new Bitmap. After the new Bitmap created, we use the Glide library to
+            // introduce it into an ImageView
+            if (img.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
                 ExifInterface ei = null;
                 try {
@@ -221,7 +273,7 @@ public class PeopleActivity extends AppCompatActivity {
                         ExifInterface.ORIENTATION_UNDEFINED);
 
                 Bitmap rotatedBitmap;
-                switch(orientation) {
+                switch (orientation) {
 
                     case ExifInterface.ORIENTATION_ROTATE_90:
                         rotatedBitmap = rotateImage(bitmap, 90);
@@ -241,11 +293,16 @@ public class PeopleActivity extends AppCompatActivity {
                 }
                 Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.picturePerson);
             }
+
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());
         }
     }
 
+    /**
+     * Function responsible to get the item click from the Bottom Navigation Bar, use
+     * a listener to create a new intent and move the user to a new Activity.
+     */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             item -> {
                 Intent resultIntent = null;
@@ -259,7 +316,7 @@ public class PeopleActivity extends AppCompatActivity {
                                 LocationActivity.class);
                         break;
                 }
-                if (resultIntent != null){
+                if (resultIntent != null) {
                     startActivity(resultIntent);
                     PeopleActivity.this.finish();
                     return true;
@@ -267,7 +324,13 @@ public class PeopleActivity extends AppCompatActivity {
                 return false;
             };
 
-    private void deleteItem(int position){
+    /**
+     * Function called after listener from alertDialog positive button click.
+     * This function is responsible to delete the item from the recyclerView because it deletes
+     * the document based on the position from the firebase and the id from the list of ids.
+     * @param position of itemView clicked.
+     */
+    private void deleteItem(int position) {
         String id = this.ids.get(position);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         fb.collection("peoples")
@@ -276,6 +339,12 @@ public class PeopleActivity extends AppCompatActivity {
         this.ids.remove(position);
     }
 
+    /**
+     * Function called to rotate the bitmap based on an angle.
+     * @param source bitmap to be rotated.
+     * @param angle to rotate the bitmap.
+     * @return the new bitmap to insert into imageView.
+     */
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -283,7 +352,12 @@ public class PeopleActivity extends AppCompatActivity {
                 matrix, true);
     }
 
-    private String getIdDocument(int position){
+    /**
+     * Function called to return the id of the document based on the position of itemView clicked.
+     * @param position of itemView clicked.
+     * @return the id of the document.
+     */
+    private String getIdDocument(int position) {
         return this.ids.get(position);
     }
 }

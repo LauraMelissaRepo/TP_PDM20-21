@@ -25,6 +25,8 @@ public class ShowLocationActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        // Obtain the information passed from the activity that called this Map activity to show
+        // the marker
         Bundle extras = getIntent().getExtras();
         this.lat = extras.getString("Lat");
         this.lng = extras.getString("Lng");
@@ -44,7 +46,7 @@ public class ShowLocationActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker in the location of the itemView clicked and move the camera with zoom on it
         LatLng location = new LatLng(Double.parseDouble(this.lat), Double.parseDouble(this.lng));
         mMap.addMarker(new MarkerOptions().position(location).title(this.title));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 17f);

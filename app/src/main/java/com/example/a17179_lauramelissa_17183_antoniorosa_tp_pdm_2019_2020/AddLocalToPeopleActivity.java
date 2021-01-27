@@ -56,6 +56,7 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //Button to move camera and listener
         Button moveCamera = findViewById(R.id.moveCamera);
         moveCamera.setOnClickListener(v -> moveCameraCurrentLocation());
     }
@@ -73,6 +74,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Dexter Library to verify the permissions to access the location of device.
+        // If the permission is granted we call addCurrentLocationMarker(), if it is not granted
+        // we show a alertDialog to user with information about it
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
@@ -95,20 +99,27 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
                     }
                 }).check();
 
+        // Listener to a click on map
         mMap.setOnMapClickListener(latLng -> {
+            // If there is already a marker, we remove it from the map
             if (this.lastMarker != null) {
                 this.lastMarker.remove();
             }
+            // Create a new marker and introduce it on map with some customization
             this.lastMarker = mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .draggable(true)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            // Get the position latitude and longitude from the click and save on global variable's
             this.lat = "" + this.lastMarker.getPosition().latitude;
             this.lng = "" + this.lastMarker.getPosition().longitude;
         });
 
+        // Button to save location and listener
         Button saveButton = findViewById(R.id.saveLocation);
         saveButton.setOnClickListener(v -> {
+            // If the latitude and longitude are null, it means that there is no position and
+            // and alertDialog is shown to inform user to add a new location.
             if (this.lat == null && this.lng == null){
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
 
@@ -118,7 +129,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
                         (dialog, which) -> dialog.cancel());
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-            }else{
+            }
+            // If there is an position, we return the latitude and longitude to the previous activity
+            else{
                 Intent intent = getIntent();
                 intent.putExtra("lastMarkerLat", this.lat);
                 intent.putExtra("lastMarkerLng", this.lng);
@@ -128,6 +141,10 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         });
     }
 
+    /**
+     * Function responsible for showing an alertDialog to the user
+     * and inform the user that permissions are required to use the functionality.
+     */
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
         builder.setTitle(R.string.showSettingDialogTitle);
@@ -141,7 +158,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         builder.show();
     }
 
-    // navigating user to app settings
+    /**
+     * Function responsible for moving the user to the application's permissions.
+     */
     private void openSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -149,6 +168,12 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         startActivityForResult(intent, 101);
     }
 
+    /**
+     * Function responsible to decode a vectorDrawable and introduce it as icon for currentLocation
+     * marker.
+     * @param context for icon.
+     * @return bitmap to use icon.
+     */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_my_location_24);
         vectorDrawable.setBounds(0,
@@ -163,6 +188,9 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    /**
+     * Function responsible
+     */
     private void addCurrentLocationMarker() {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.
                 getFusedLocationProviderClient(getApplicationContext());
