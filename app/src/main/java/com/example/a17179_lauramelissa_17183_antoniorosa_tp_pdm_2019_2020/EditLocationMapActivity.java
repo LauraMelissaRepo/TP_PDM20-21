@@ -30,10 +30,12 @@ public class EditLocationMapActivity extends FragmentActivity implements OnMapRe
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Get info from previous activity
         Bundle extras = getIntent().getExtras();
         this.lat = extras.getString("Lat");
         this.lng = extras.getString("Lng");
 
+        // Button to edit location and listener to send new info for previous activity
         Button editButton = findViewById(R.id.editLocation);
         editButton.setOnClickListener(v -> {
             Intent intent = getIntent();
@@ -57,16 +59,20 @@ public class EditLocationMapActivity extends FragmentActivity implements OnMapRe
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Listener to a click on map
         mMap.setOnMapClickListener(latLng -> {
+            // Clear all map
             mMap.clear();
+            // Create a new marker and introduce it on map with some customization
             mMap.addMarker(new MarkerOptions().position(latLng).draggable(true).title("Localização"));
+            // Move camera to new location with zoom
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17f);
             mMap.animateCamera(cameraUpdate);
             this.lat = String.valueOf(latLng.latitude);
             this.lng = String.valueOf(latLng.longitude);
         });
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker in location and move the camera
         LatLng location = new LatLng(Double.parseDouble(this.lat), Double.parseDouble(this.lng));
         mMap.addMarker(new MarkerOptions().position(location).title("Localização"));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 17f);

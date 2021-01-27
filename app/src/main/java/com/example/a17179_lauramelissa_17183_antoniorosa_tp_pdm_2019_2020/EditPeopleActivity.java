@@ -54,10 +54,12 @@ public class EditPeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_people);
 
+        // ToolBar
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.editPeopleToolbarTitle);
 
+        // Get information from intent from previous activity
         Bundle extras = getIntent().getExtras();
         this.documentID = extras.getString("DocumentID");
         this.lat = extras.getString("Lat");
@@ -66,15 +68,23 @@ public class EditPeopleActivity extends AppCompatActivity {
         this.degree = extras.getString("Degree");
         this.imgPath = extras.getString("ImgPath");
 
+        // EditText with name of person
         EditText namePersonEdit = findViewById(R.id.namePersonTextInputEdit);
         namePersonEdit.setText(this.name);
 
+        // EditText with degree of person
         EditText degreePersonEdit = findViewById(R.id.degreePersonTextInputEdit);
         degreePersonEdit.setText(this.degree);
 
+        // ImageView with img from path using Glide Library
         this.imageView = findViewById(R.id.imageViewEdit);
         Glide.with(getApplicationContext()).load(getImage(this.imgPath)).into(this.imageView);
 
+        // FloatingActionButton to take picture and listener. Use of the Dexter library to
+        // verify if the permission to use camera is granted. If the permission is granted
+        // we continue the action in listener and create a intent to capture the photo and
+        // create a new image file to save the image into the app storage inside the device memory.
+        // If the permission is denied we call a function used to inform the user.
         Button takePictureEdit = findViewById(R.id.takePictureEdit);
         takePictureEdit.setOnClickListener(v -> {
             Dexter.withActivity(this)
@@ -103,6 +113,10 @@ public class EditPeopleActivity extends AppCompatActivity {
                     }).check();
         });
 
+        // FloatingActionButton to get image and listener. Use of the Dexter library to
+        // verify if the permission to read external storage is granted. If the permission is granted
+        // we continue the action in listener and create a intent to pick the image.
+        // If the permission is denied we call a function used to inform the user.
         Button selectPictureEdit = findViewById(R.id.selectPictureEdit);
         selectPictureEdit.setOnClickListener(v -> {
             Dexter.withActivity(this)
@@ -130,6 +144,7 @@ public class EditPeopleActivity extends AppCompatActivity {
                     }).check();
         });
 
+        // FloatingActionButton to move user to map activity to save a new location
         Button locationEdit = findViewById(R.id.locationEdit);
         locationEdit.setOnClickListener(v -> {
             Intent intentMap = new Intent(getApplicationContext(), EditLocationMapActivity.class);
@@ -138,6 +153,8 @@ public class EditPeopleActivity extends AppCompatActivity {
             startActivityForResult(intentMap, MAP_REQUEST_CODE);
         });
 
+        // Floating action button to save all updated information into firebase and create new img
+        // file if taken
         Button editPeople = findViewById(R.id.editPeopleButton);
         editPeople.setOnClickListener(v -> {
             FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -147,13 +164,27 @@ public class EditPeopleActivity extends AppCompatActivity {
             documentReference.update("imgPath", String.valueOf(this.imgPath));
             documentReference.update("lat", String.valueOf(this.lat));
             documentReference.update("lng", String.valueOf(this.lng));
+            galleryAddPic();
             finish();
         });
 
     }
 
+    /**
+     * Function called after certain activities are finished.
+     * @param requestCode code responsible for identifying the activity.
+     * @param resultCode code responsible for identifying how the activity ended,
+     *                  successfully, unsuccessfully or if it was canceled.
+     * @param data information returned by the closed activity.
+     */
     @Override
     protected void onActivityResult ( int requestCode, int resultCode, @Nullable Intent data){
+        // If the closed activity was "taking a picture" and if it ended successfully,
+        // a Uri is created from the file created for the image taken and we associate
+        // the image taken with it. Then we recognize the Exif of the image and its orientation,
+        // based on this orientation, the image is rotated and saved in a new bitmap.
+        // Finally, the Glide library is used to insert the image into the
+        // imageView and the path of the image is saved in a global variable
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri uri = Uri.fromFile(this.photoFile);
@@ -188,10 +219,12 @@ public class EditPeopleActivity extends AppCompatActivity {
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
-            } else {
-                Toast.makeText(this, "Last Path= " + this.imgPath, Toast.LENGTH_LONG).show();
             }
-        } else if (requestCode == GALERY_REQUEST_CODE) {
+        }
+        // If the closed activity was "choose a photo from the gallery" and if it ended in success,
+        // a Uri of the selected image is created, the path of the image is saved in a global
+        // variable and the Glide library is used to introduce the image in a imageView.
+        else if (requestCode == GALERY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -208,17 +241,26 @@ public class EditPeopleActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Last Path= " + this.imgPath, Toast.LENGTH_LONG).show();
             }
-        } else if (requestCode == MAP_REQUEST_CODE) {
+        }
+        // If the closed activity was "choose a location" and if it ended in success,
+        // the latitude and longitude returned from the activity are kept in global variables.
+        else if (requestCode == MAP_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 this.lat = data.getStringExtra("EditLat");
                 this.lng = data.getStringExtra("EditLng");
-            } else {
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    /**
+     * Function used to decode the img with its path into bitmap,
+     * get its Exif, its orientation and with this orientation, rotate the image if
+     * necessary and save it into a new bitmap.
+     * @param imgPath path for image.
+     * @return new bitmap with rotated img.
+     */
     public static Bitmap getImage(String imgPath){
         File img = new File(imgPath);
         Bitmap rotatedBitmap;
@@ -259,6 +301,12 @@ public class EditPeopleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Function called to rotate the bitmap based on an angle.
+     * @param source bitmap to be rotated.
+     * @param angle to rotate the bitmap.
+     * @return the new bitmap to insert into imageView.
+     */
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -266,6 +314,10 @@ public class EditPeopleActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    /**
+     * Funciton that creates the file for the photo taken.
+     * @return the new file.
+     */
     private Uri createFile () {
         this.photoFile = null;
         try {
@@ -283,6 +335,11 @@ public class EditPeopleActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Function responsible for creating a path, name and extension of the file created for the image.
+     * @return the image file.
+     * @throws Exception
+     */
     private File createImageFile () throws Exception {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -298,6 +355,10 @@ public class EditPeopleActivity extends AppCompatActivity {
         return image;
     }
 
+    /**
+     * Function responsible for showing an alertDialog to the user
+     * and inform the user that permissions are required to use the functionality.
+     */
     private void showSettingsDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(EditPeopleActivity.this);
         builder.setTitle(R.string.showSettingDialogTitle);
@@ -313,11 +374,25 @@ public class EditPeopleActivity extends AppCompatActivity {
 
     }
 
-    // navigating user to app settings
+    /**
+     * Function responsible for moving the user to the application's permissions
+     */
     private void openSettings () {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
         startActivityForResult(intent, 101);
+    }
+
+    /**
+     * Function responsible for inserting the image taken
+     * into the created file and saving it to the application's storage
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(this.currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 }

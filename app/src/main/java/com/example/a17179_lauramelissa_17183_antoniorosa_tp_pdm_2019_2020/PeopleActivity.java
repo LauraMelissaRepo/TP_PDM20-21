@@ -238,6 +238,7 @@ public class PeopleActivity extends AppCompatActivity {
                                     // if the positive button is clicked we call the function
                                     // deleteItem() and pass the position of the itemView clicked
                                     deleteItem(this.positionClicked);
+                                    refreshData();
                                     dialog.cancel();
                                 });
                 alertDialog
