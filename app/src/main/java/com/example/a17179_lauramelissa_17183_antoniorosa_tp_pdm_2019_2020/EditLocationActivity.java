@@ -32,12 +32,14 @@ public class EditLocationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.editLocationToolbar);
 
+        // Get information from intent from previous activity
         Bundle extras = getIntent().getExtras();
         this.documentID = extras.getString("DocumentID");
         String locationDescription = extras.getString("LocationName");
         this.lat = extras.getString("Lat");
         this.lng = extras.getString("Lng");
 
+        // EditText with the location description
         EditText locationEditDescription = findViewById(R.id.location_edit_description);
         locationEditDescription.setText(locationDescription);
 
@@ -49,6 +51,8 @@ public class EditLocationActivity extends AppCompatActivity {
             startActivityForResult(intentMap, MAP_REQUEST_CODE);
         });
 
+        //listener to save all the information edited. Gets the new description and the
+        // coordinates of the local and update it on the firebase
         Button saveEditLocationButton = findViewById(R.id.save_edited_location_btn);
         saveEditLocationButton.setOnClickListener(v -> {
             FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -60,6 +64,13 @@ public class EditLocationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Function called after certain activities are finished.
+     * @param requestCode code responsible for identifying the activity.
+     * @param resultCode code responsible for identifying how the activity ended,
+     *                  successfully, unsuccessfully or if it was canceled.
+     * @param data information returned by the closed activity.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == MAP_REQUEST_CODE) {
