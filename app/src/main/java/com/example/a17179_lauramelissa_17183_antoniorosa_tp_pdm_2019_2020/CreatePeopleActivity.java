@@ -1,5 +1,6 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.graphics.Matrix;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +27,8 @@ import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -169,7 +173,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("peoples")
                         .add(people);
-                galleryAddPic();
+                new Thread(this::galleryAddPic).start();
                 finish();
             }
         });
@@ -184,6 +188,7 @@ public class CreatePeopleActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // Using thread to get a better performance.
         // If the closed activity was "taking a picture" and if it ended successfully,
         // a Uri is created from the file created for the image taken and we associate
         // the image taken with it. Then we recognize the Exif of the image and its orientation,
@@ -192,37 +197,52 @@ public class CreatePeopleActivity extends AppCompatActivity {
         // imageView and the path of the image is saved in a global variable
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri uri = Uri.fromFile(this.photoFile);
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    ExifInterface ei = new ExifInterface(this.currentPhotoPath);
-                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                            ExifInterface.ORIENTATION_UNDEFINED);
+                new Thread(() -> {
+                    Uri uri = Uri.fromFile(this.photoFile);
+                    Bitmap bitmap;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        ExifInterface ei = new ExifInterface(this.currentPhotoPath);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
 
-                    Bitmap rotatedBitmap = null;
-                    switch (orientation) {
-                        case ExifInterface.ORIENTATION_ROTATE_90:
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
+                        Bitmap rotatedBitmap = null;
+                        switch (orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotateImage(bitmap, 90);
+                                break;
 
-                        case ExifInterface.ORIENTATION_ROTATE_180:
-                            rotatedBitmap = rotateImage(bitmap, 180);
-                            break;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotateImage(bitmap, 180);
+                                break;
 
-                        case ExifInterface.ORIENTATION_ROTATE_270:
-                            rotatedBitmap = rotateImage(bitmap, 270);
-                            break;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotateImage(bitmap, 270);
+                                break;
 
-                        case ExifInterface.ORIENTATION_NORMAL:
-                        default:
-                            rotatedBitmap = bitmap;
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
                     }
-                    Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.imageView);
-                    this.pictureTakenPath = this.currentPhotoPath;
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
+                });
+                // Glide to load bitmap from thread. It waits and when the
+                // resource is ready, load it into imageView
+                Glide.with(getApplicationContext()).asBitmap().load(this.currentPhotoPath).into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        ImageView imageView = findViewById(R.id.imageViewEdit);
+                        imageView.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+                this.pictureTakenPath = this.currentPhotoPath;
             }
         }
         // If the closed activity was "choose a photo from the gallery" and if it ended in success,

@@ -1,6 +1,7 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.graphics.Matrix;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020.data.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -257,44 +261,59 @@ public class PeopleActivity extends AppCompatActivity {
             // Creation of a new file with the path from the img
             File img = new File(imgPath);
 
+            // Using thread to get a better performance.
             // Block of code responsible for verifying if the img exists,
             // decode the file into bitmap, get the Exif of the image and the orientation.
             // After getting the orientation, we use the Exif to rotate the image and save it
             // into a new Bitmap. After the new Bitmap created, we use the Glide library to
             // introduce it into an ImageView
             if (img.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
-                ExifInterface ei = null;
-                try {
-                    ei = new ExifInterface(imgPath);
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                        ExifInterface.ORIENTATION_UNDEFINED);
+                new Thread(() -> {
+                    Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
+                    ExifInterface ei = null;
+                    try {
+                        ei = new ExifInterface(imgPath);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.ORIENTATION_UNDEFINED);
+                    Bitmap rotatedBitmap;
+                    switch (orientation) {
 
-                Bitmap rotatedBitmap;
-                switch (orientation) {
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            rotatedBitmap = rotateImage(bitmap, 90);
+                            break;
 
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        rotatedBitmap = rotateImage(bitmap, 90);
-                        break;
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            rotatedBitmap = rotateImage(bitmap, 180);
+                            break;
 
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        rotatedBitmap = rotateImage(bitmap, 180);
-                        break;
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            rotatedBitmap = rotateImage(bitmap, 270);
+                            break;
 
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        rotatedBitmap = rotateImage(bitmap, 270);
-                        break;
-
-                    case ExifInterface.ORIENTATION_NORMAL:
-                    default:
-                        rotatedBitmap = bitmap;
-                }
-                Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.picturePerson);
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            rotatedBitmap = bitmap;
+                    }
+                });
             }
 
+            // Glide to load bitmap from thread. It waits and when the
+            // resource is ready, load it into imageView
+            Glide.with(getApplicationContext()).asBitmap().load(img.getAbsolutePath()).into(new CustomTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    ImageView imageView = itemView.findViewById(R.id.picturePerson);
+                    imageView.setImageBitmap(resource);
+                }
+
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                }
+            });
             this.namePerson.setText(people.getNamePerson());
             this.degreePerson.setText(people.getDegreePerson());
         }
@@ -329,6 +348,7 @@ public class PeopleActivity extends AppCompatActivity {
      * Function called after listener from alertDialog positive button click.
      * This function is responsible to delete the item from the recyclerView because it deletes
      * the document based on the position from the firebase and the id from the list of ids.
+     *
      * @param position of itemView clicked.
      */
     private void deleteItem(int position) {
@@ -342,8 +362,9 @@ public class PeopleActivity extends AppCompatActivity {
 
     /**
      * Function called to rotate the bitmap based on an angle.
+     *
      * @param source bitmap to be rotated.
-     * @param angle to rotate the bitmap.
+     * @param angle  to rotate the bitmap.
      * @return the new bitmap to insert into imageView.
      */
     public static Bitmap rotateImage(Bitmap source, float angle) {
@@ -355,6 +376,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     /**
      * Function called to return the id of the document based on the position of itemView clicked.
+     *
      * @param position of itemView clicked.
      * @return the id of the document.
      */

@@ -1,5 +1,6 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
@@ -76,9 +80,25 @@ public class EditPeopleActivity extends AppCompatActivity {
         EditText degreePersonEdit = findViewById(R.id.degreePersonTextInputEdit);
         degreePersonEdit.setText(this.degree);
 
-        // ImageView with img from path using Glide Library
+        // ImageView with img from thread and converting img with path into bitmap
         this.imageView = findViewById(R.id.imageViewEdit);
-        Glide.with(getApplicationContext()).load(getImage(this.imgPath)).into(this.imageView);
+        new Thread(() -> {
+            Bitmap bitmap = BitmapFactory.decodeFile(this.imgPath);
+        });
+        // Glide to load bitmap from thread. It waits and when the
+        // resource is ready, load it into imageView
+        Glide.with(getApplicationContext()).asBitmap().load(this.imgPath).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                ImageView imageView = findViewById(R.id.imageViewEdit);
+                imageView.setImageBitmap(resource);
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+            }
+        });
 
         // FloatingActionButton to take picture and listener. Use of the Dexter library to
         // verify if the permission to use camera is granted. If the permission is granted
@@ -179,6 +199,7 @@ public class EditPeopleActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult ( int requestCode, int resultCode, @Nullable Intent data){
+        // Using thread to get a better performance.
         // If the closed activity was "taking a picture" and if it ended successfully,
         // a Uri is created from the file created for the image taken and we associate
         // the image taken with it. Then we recognize the Exif of the image and its orientation,
@@ -187,38 +208,53 @@ public class EditPeopleActivity extends AppCompatActivity {
         // imageView and the path of the image is saved in a global variable
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Uri uri = Uri.fromFile(this.photoFile);
-                Bitmap bitmap;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    androidx.exifinterface.media.ExifInterface ei = new androidx.exifinterface.media.ExifInterface(this.currentPhotoPath);
-                    int orientation = ei.getAttributeInt(androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
-                            androidx.exifinterface.media.ExifInterface.ORIENTATION_UNDEFINED);
+                new Thread(() -> {
+                    Uri uri = Uri.fromFile(this.photoFile);
+                    Bitmap bitmap;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        androidx.exifinterface.media.ExifInterface ei = new androidx.exifinterface.media.ExifInterface(this.currentPhotoPath);
+                        int orientation = ei.getAttributeInt(androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+                                androidx.exifinterface.media.ExifInterface.ORIENTATION_UNDEFINED);
 
-                    Bitmap rotatedBitmap = null;
-                    switch (orientation) {
-                        case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90:
-                            rotatedBitmap = rotateImage(bitmap, 90);
-                            break;
+                        Bitmap rotatedBitmap = null;
+                        switch (orientation) {
+                            case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotateImage(bitmap, 90);
+                                break;
 
-                        case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180:
-                            rotatedBitmap = rotateImage(bitmap, 180);
-                            break;
+                            case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotateImage(bitmap, 180);
+                                break;
 
-                        case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270:
-                            rotatedBitmap = rotateImage(bitmap, 270);
-                            break;
+                            case androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotateImage(bitmap, 270);
+                                break;
 
-                        case androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL:
-                        default:
-                            rotatedBitmap = bitmap;
+                            case androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+                        Toast.makeText(this, this.imgPath, Toast.LENGTH_LONG).show();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
                     }
-                    Glide.with(getApplicationContext()).load(rotatedBitmap).into(this.imageView);
-                    this.imgPath = this.currentPhotoPath;
-                    Toast.makeText(this, this.imgPath, Toast.LENGTH_LONG).show();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
+                });
+                // Glide to load bitmap from thread. It waits and when the
+                // resource is ready, load it into imageView
+                Glide.with(getApplicationContext()).asBitmap().load(this.currentPhotoPath).into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        ImageView imageView = findViewById(R.id.imageViewEdit);
+                        imageView.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+                this.imgPath = this.currentPhotoPath;
             }
         }
         // If the closed activity was "choose a photo from the gallery" and if it ended in success,
@@ -251,53 +287,6 @@ public class EditPeopleActivity extends AppCompatActivity {
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    /**
-     * Function used to decode the img with its path into bitmap,
-     * get its Exif, its orientation and with this orientation, rotate the image if
-     * necessary and save it into a new bitmap.
-     * @param imgPath path for image.
-     * @return new bitmap with rotated img.
-     */
-    public static Bitmap getImage(String imgPath){
-        File img = new File(imgPath);
-        Bitmap rotatedBitmap;
-        if (img.exists()){
-            Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
-            ExifInterface ei = null;
-            try {
-                ei = new ExifInterface(imgPath);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_UNDEFINED);
-            switch(orientation) {
-
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotatedBitmap = rotateImage(bitmap, 90);
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotatedBitmap = rotateImage(bitmap, 180);
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotatedBitmap = rotateImage(bitmap, 270);
-                    break;
-
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    rotatedBitmap = bitmap;
-            }
-            return rotatedBitmap;
-        }
-        else{
-            Bitmap bitmap = BitmapFactory.decodeFile(img.getAbsolutePath());
-            rotatedBitmap = bitmap;
-            return rotatedBitmap;
         }
     }
 
