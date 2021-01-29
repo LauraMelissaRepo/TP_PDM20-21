@@ -39,4 +39,10 @@
     <string name="taskDescriptionEditText">Write your task</string>
     <string name="openMap">Open map</string>
     <string name="editLocationToolbar">Edit location</string>
+    <string name="title_activity_add_local_to_contact">Map</string>
+    <string name="title_activity_show_location">Map</string>
+    <string name="title_activity_edit_location_people">Map</string>
+    <string name="editTaskToolbar">Edit Task</string>
+    <string name="errorAlertDialogGetLocationTitle">Error</string>
+    <string name="errorAlertDialogGetLocationMessage">Error trying to access device location, try it later.</string>
 </resources>

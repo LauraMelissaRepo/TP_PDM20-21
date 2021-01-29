@@ -1,15 +1,14 @@
 <resources>
     <string name="app_name" translatable="false">AlzheimeReminder</string>
-    <string name="title_activity_location">LocationActivity</string>
     <string name="tasks">Tarefas</string>
     <string name="people">Pessoas</string>
     <string name="locations">Localizações</string>
     <string name="taskDeleteMessage">Prima sim para eliminá-la</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
-    <string name="title_activity_add_local_to_contact">Map</string>
-    <string name="title_activity_show_location">Map</string>
-    <string name="title_activity_edit_location_people">Map</string>
+    <string name="title_activity_add_local_to_contact">Mapa</string>
+    <string name="title_activity_show_location">Mapa</string>
+    <string name="title_activity_edit_location_people">Mapa</string>
     <string name="deletePeopleTitleAlertDialog">Deseja eliminar esta pessoa?</string>
     <string name="deletePeopleMessageAlertDialog">Prima sim para eliminá-la</string>
     <string name="positiveButtonDeletePeopleAlertDialog">Sim</string>
@@ -20,7 +19,7 @@
     <string name="showSettingsDialogNegativeButton">Cancelar</string>
     <string name="errorCreatePeopleTitleAlertDialog">Erro</string>
     <string name="errorCreatePeopleMessageAlertDialog">Para criar um contacto, tem que preencher toda a informação.</string>
-    <string name="errorCreatePeoplePositiveButtonAlertDialog">Ok</string>
+    <string name="errorCreatePeoplePositiveButtonAlertDialog">OK</string>
     <string name="markerTitleAtualLocation">Localização Atual</string>
     <string name="stringNameCreatePeople">Nome</string>
     <string name="stringDegreeCreatePeople">Grau Parentesco</string>
@@ -44,4 +43,6 @@
     <string name="openMap">Abrir mapa</string>
     <string name="editLocationToolbar">Editar localização</string>
     <string name="editTaskToolbar">Editar tarefa</string>
+    <string name="errorAlertDialogGetLocationTitle">Erro</string>
+    <string name="errorAlertDialogGetLocationMessage">Erro a tentar aceder à localização do dispositivo, tente mais tarde.</string>
 </resources>

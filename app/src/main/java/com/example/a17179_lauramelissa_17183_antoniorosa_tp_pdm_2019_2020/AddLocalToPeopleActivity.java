@@ -1,6 +1,5 @@
 package com.example.a17179_lauramelissa_17183_antoniorosa_tp_pdm_2019_2020;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,8 +28,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
 import android.content.Context;
@@ -213,15 +210,32 @@ public class AddLocalToPeopleActivity extends FragmentActivity implements OnMapR
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
-            this.currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions()
-                    .position(this.currentLatLng)
-                    .title(getString(R.string.markerTitleAtualLocation))
-                    .icon(bitmapDescriptorFromVector(getApplicationContext()
-                    )));
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
-            mMap.animateCamera(cameraUpdate);
+            // If we can detect the last location from device we mark it on map and move camera
+            // to its position to help the user to locate it self
+            if (location != null){
+                this.currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.addMarker(new MarkerOptions()
+                        .position(this.currentLatLng)
+                        .title(getString(R.string.markerTitleAtualLocation))
+                        .icon(bitmapDescriptorFromVector(getApplicationContext()
+                        )));
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(this.currentLatLng, 17f);
+                mMap.animateCamera(cameraUpdate);
+            } else{
+                showErrorDialog();
+            }
         });
+    }
+
+    private void showErrorDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddLocalToPeopleActivity.this);
+        builder.setTitle(R.string.errorAlertDialogGetLocationTitle);
+        builder.setMessage(R.string.errorAlertDialogGetLocationMessage);
+        builder.setPositiveButton(R.string.errorCreatePeoplePositiveButtonAlertDialog, (dialog, which) -> {
+            dialog.cancel();
+            finish();
+        });
+        builder.show();
     }
 
     /**
