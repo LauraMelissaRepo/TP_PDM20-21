@@ -40,6 +40,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class and those derived from it, implement the requirements 2, 3, 4, 5, 6.
+ */
 public class PeopleActivity extends AppCompatActivity {
 
     private PeopleAdapter peopleAdapter;

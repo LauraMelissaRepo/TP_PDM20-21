@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class and those derived from it, implement the requirements 2, 3 and 6.
+ */
 public class LocationActivity extends AppCompatActivity {
 
     private LocationAdapter locationAdapter;

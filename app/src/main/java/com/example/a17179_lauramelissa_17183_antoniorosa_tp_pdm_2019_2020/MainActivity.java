@@ -30,6 +30,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  This class and those derived from it, implement the requirements 2 and 5
+ */
 public class MainActivity extends AppCompatActivity {
 
     private TaskAdapter adapter;
