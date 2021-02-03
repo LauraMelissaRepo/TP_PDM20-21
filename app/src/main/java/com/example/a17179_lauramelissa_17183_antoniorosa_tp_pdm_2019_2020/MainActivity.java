@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
         private final CheckBox isDone;
         private final TextView task_description;
-        private CardView cardView;
         private Task task;
 
         //use itemView to search for items
@@ -168,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
             super(itemView);
             this.task_description = itemView.findViewById(R.id.task_item_description);
             this.isDone = itemView.findViewById(R.id.task_item_check_box);
-            this.cardView = itemView.findViewById(R.id.card_item_view);
 
             builder = new AlertDialog.Builder(MainActivity.this);
 
@@ -180,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             //listener to the item view to edit the information.
             // Send the information (id and description) than the user wants to change to the edit activity
-            this.cardView.setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, EditTaskActivity.class);
                 intent.putExtra("taskId", this.task.getId());
                 intent.putExtra(EditTaskActivity.TASK_KEY, this.task_description.getText().toString());
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             //listener to the item view to delete it
-            this.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                    builder.setMessage(R.string.taskDeleteMessage);
