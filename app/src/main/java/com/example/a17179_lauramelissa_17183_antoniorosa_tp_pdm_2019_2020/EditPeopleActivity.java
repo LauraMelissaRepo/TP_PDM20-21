@@ -184,7 +184,9 @@ public class EditPeopleActivity extends AppCompatActivity {
             documentReference.update("imgPath", String.valueOf(this.imgPath));
             documentReference.update("lat", String.valueOf(this.lat));
             documentReference.update("lng", String.valueOf(this.lng));
-            galleryAddPic();
+            if(this.currentPhotoPath != null) {
+                galleryAddPic();
+            }
             finish();
         });
 
